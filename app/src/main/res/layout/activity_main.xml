@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:tools="http://schemas.android.com/tools"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="match_parent"
+                                             tools:context="org.pictlonis.MainActivity">
+
+    <!--<EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:textColor="#000000"
+        android:cursorVisible="true"
+        android:ems="10"
+        android:id="@+id/editTextMeta"
+        android:layout_gravity="center_vertical"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:visibility="visible"/>-->
+
+    <TextView
+        android:id="@+id/cacaprout"
+        android:layout_width="match_parent"
+        android:layout_height="144dp"
+        android:text="sdlkfjasldjflasdjflasdjflasjdfl"
+        android:textColor="#000000"
+        android:visibility="visible"/>
+
+    <!-- <EditText
+         android:id="@+id/editText"
+         style="@style/Widget.AppCompat.EditText"
+         android:layout_width="380dp"
+         android:layout_height="45dp"
+         android:ems="10"
+         android:focusable="true"
+         android:focusableInTouchMode="true"
+         android:hint="Qu'est-ce que c'est ?"
+         android:inputType="text"
+         android:text="Name"
+         tools:layout_editor_absoluteX="0dp"
+         tools:layout_editor_absoluteY="464dp"/>-->
+
+</android.support.constraint.ConstraintLayout>
