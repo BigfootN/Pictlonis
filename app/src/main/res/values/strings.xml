@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Pictlonis</string>
+    <string name="nb_clt_hint">Nombre de joueurs</string>
+    <string name="port_hint">Port</string>
+    <string name="ip_hint">Adresse IP</string>
+    <string name="validate_btn_title">Valider</string>
+    <string name="clt_btn_title">Client</string>
+    <string name="host_btn_title">Heberger</string>
 </resources>

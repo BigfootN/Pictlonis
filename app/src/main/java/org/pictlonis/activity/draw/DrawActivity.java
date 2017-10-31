@@ -1,4 +1,4 @@
-package org.pictlonis;
+package org.pictlonis.activity.draw;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -8,7 +8,10 @@ import android.view.ViewTreeObserver;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
-public class MainActivity extends Activity {
+import org.pictlonis.DrawingView;
+import org.pictlonis.R;
+
+public class DrawActivity extends Activity {
 	private DrawingView dv;
 	private LinearLayout layout;
 	private EditText txtv;

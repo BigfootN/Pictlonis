@@ -6,7 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.Point;
+import android.graphics.PointF;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -19,18 +19,19 @@ public class DrawingView extends View {
 	private Bitmap bitmap;
 	private Canvas canvas;
 	private Path   path;
-	private Paint  bitmapPaint;
-	private Paint  paint;
+	private Paint  bitmapPainter;
+	private Paint painter;
+	private PointF currentPos;
 
 	private void initPainter() {
-		paint = new Paint();
-		paint.setAntiAlias(true);
-		paint.setDither(true);
-		paint.setColor(Color.GREEN);
-		paint.setStyle(Paint.Style.STROKE);
-		paint.setStrokeJoin(Paint.Join.ROUND);
-		paint.setStrokeCap(Paint.Cap.ROUND);
-		paint.setStrokeWidth(12);
+		painter = new Paint();
+		painter.setAntiAlias(true);
+		painter.setDither(true);
+		painter.setColor(Color.GREEN);
+		painter.setStyle(Paint.Style.STROKE);
+		painter.setStrokeJoin(Paint.Join.ROUND);
+		painter.setStrokeCap(Paint.Cap.ROUND);
+		painter.setStrokeWidth(5);
 	}
 
 	private void touch_start(float x, float y) {
@@ -44,7 +45,7 @@ public class DrawingView extends View {
 	}
 
 	private void touch_up() {
-		canvas.drawPath(path, paint);
+		canvas.drawPath(path, painter);
 		path.reset();
 	}
 
@@ -52,7 +53,7 @@ public class DrawingView extends View {
 		super(c);
 		context = c;
 		path = new Path();
-		bitmapPaint = new Paint(Paint.DITHER_FLAG);
+		bitmapPainter = new Paint(Paint.DITHER_FLAG);
 		initPainter();
 	}
 
@@ -61,6 +62,7 @@ public class DrawingView extends View {
 		float x = event.getX();
 		float y = event.getY();
 
+		currentPos = new PointF(x, y);
 		switch (event.getAction()) {
 			case MotionEvent.ACTION_DOWN:
 				touch_start(x, y);
@@ -90,16 +92,11 @@ public class DrawingView extends View {
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
 
-		canvas.drawBitmap(bitmap, 0, 0, bitmapPaint);
-		canvas.drawPath(path, paint);
+		canvas.drawBitmap(bitmap, 0, 0, bitmapPainter);
+		canvas.drawPath(path, painter);
 	}
 
-	public Point getCurrentPoint() {
-		Point ret;
-
-		ret = null;
-		//ret = new Point((int)x, (int)y);
-
-		return ret;
+	public PointF getCurrentPos() {
+		return currentPos;
 	}
 }
