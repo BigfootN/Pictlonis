@@ -83,12 +83,10 @@ public class Server implements NetworkNode {
 		}
 	}
 
-	public void sendToAll(String ... messages) throws Exception {
-	}
-
 	@Override
-	public String getMessage() throws Exception {
-		String ret;
+	public MessageInfo getMessage() throws Exception {
+		MessageInfo ret;
+		String msg;
 
 		ret = null;
 		while (ret == null) {
@@ -106,7 +104,8 @@ public class Server implements NetworkNode {
 
 					sock_client = (SocketChannel) key.channel();
 					socket = sock_client.socket();
-					ret = readMessage(socket);
+					msg = readMessage(socket);
+					ret = new MessageInfo(msg, socket);
 				}
 
 				keyIterator.remove();
@@ -117,12 +116,25 @@ public class Server implements NetworkNode {
 	}
 
 	@Override
-	public void sendMessage(String msg) throws Exception {
-		sendToAll(msg);
+	public NodeType getNodeType() {
+		return NodeType.SERVER;
 	}
 
 	@Override
-	public NodeType getNodeType() {
-		return NodeType.SERVER;
+	public void close() throws Exception {
+		ssocketChannel.close();
+	}
+
+	public void sendMessageTo(String msg, Socket sock) throws Exception {
+		NetworkMessage.sendMessage(msg, sock);
+	}
+
+	public void sendMessageFrom(String msg, Socket sock) throws Exception {
+		ArrayList<Socket> tmp_list;
+
+		tmp_list = new ArrayList<Socket>(sclients);
+		tmp_list.remove(sock);
+
+		NetworkMessage.sendMessage(msg, tmp_list);
 	}
 }

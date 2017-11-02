@@ -6,7 +6,7 @@ import org.pictlonis.Utils;
  * Created by bigfoot on 31/10/17.
  */
 
-public class ClientSettingPresenterImpl implements ClientSettingPresenter{
+public class ClientSettingPresenterImpl implements ClientSettingPresenter {
 	private ClientSettingView view;
 	private ClientSettingInteractor interactor;
 	private int portParsed;
@@ -31,7 +31,7 @@ public class ClientSettingPresenterImpl implements ClientSettingPresenter{
 	}
 
 	public ClientSettingPresenterImpl(ClientSettingView view) {
-		this.view  = view;
+		this.view = view;
 		interactor = new ClientSettingInteractorImpl();
 	}
 
@@ -44,8 +44,9 @@ public class ClientSettingPresenterImpl implements ClientSettingPresenter{
 		else {
 			try {
 				interactor.connect(ip, portParsed);
+				view.onSuccess();
 			} catch (Exception e) {
-
+				view.onFailure(e.getMessage());
 			}
 		}
 	}

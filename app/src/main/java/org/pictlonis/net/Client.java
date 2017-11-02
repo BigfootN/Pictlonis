@@ -1,11 +1,8 @@
 package org.pictlonis.net;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -26,33 +23,34 @@ public class Client implements NetworkNode {
 	}
 
 	@Override
-	public String getMessage() throws IOException {
+	public MessageInfo getMessage() throws IOException {
+		MessageInfo ret;
+		String msg;
+
 		InputStreamReader stream;
 		BufferedReader reader;
 
 		stream = new InputStreamReader(socket.getInputStream());
 		reader = new BufferedReader(stream);
 
-		return reader.readLine();
+
+		msg = reader.readLine();
+		ret = new MessageInfo(msg, null);
+
+		return ret;
 	}
 
-	@Override
 	public void sendMessage(String msg) throws Exception {
-		BufferedWriter bw;
-		OutputStream os;
-		OutputStreamWriter osw;
-
-		os = socket.getOutputStream();
-		osw = new OutputStreamWriter(os);
-		bw = new BufferedWriter(osw);
-
-		bw.write(msg);
-		bw.flush();
-		bw.close();
+		NetworkMessage.sendMessage(msg, socket);
 	}
 
 	@Override
 	public NodeType getNodeType() {
 		return NodeType.CLIENT;
+	}
+
+	@Override
+	public void close() throws Exception {
+		socket.close();
 	}
 }

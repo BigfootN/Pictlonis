@@ -5,7 +5,7 @@ package org.pictlonis.net;
  */
 
 public interface NetworkNode {
-	String getMessage() throws Exception;
-	void sendMessage(String msg) throws Exception;
+	MessageInfo getMessage() throws Exception;
 	NodeType getNodeType();
+	void close() throws Exception;
 }
