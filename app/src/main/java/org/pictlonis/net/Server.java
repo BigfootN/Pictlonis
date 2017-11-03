@@ -129,6 +129,10 @@ public class Server implements NetworkNode {
 		NetworkMessage.sendMessage(msg, sock);
 	}
 
+	public void sendMessage(String msg) throws Exception {
+		NetworkMessage.sendMessage(msg, sclients);
+	}
+
 	public void sendMessageFrom(String msg, Socket sock) throws Exception {
 		ArrayList<Socket> tmp_list;
 

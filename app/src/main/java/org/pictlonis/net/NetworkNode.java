@@ -8,4 +8,5 @@ public interface NetworkNode {
 	MessageInfo getMessage() throws Exception;
 	NodeType getNodeType();
 	void close() throws Exception;
+	void sendMessage(String msg) throws Exception;
 }

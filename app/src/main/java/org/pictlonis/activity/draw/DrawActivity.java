@@ -2,21 +2,24 @@ package org.pictlonis.activity.draw;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
-import org.pictlonis.DrawingView;
 import org.pictlonis.R;
 
-public class DrawActivity extends Activity {
-	private DrawingView dv;
+public class DrawActivity extends Activity implements TextView.OnEditorActionListener, DrawingView{
+	private Drawer dv;
 	private LinearLayout layout;
 	private EditText txtv;
 	private int heightPerc;
 	private int widthPerc;
+	private DrawPresenter presenter;
 
 	private void setDrawingViewDim(int heightPerc, int widthPerc) {
 		this.heightPerc = heightPerc;
@@ -51,8 +54,10 @@ public class DrawActivity extends Activity {
 	}
 
 	private void initViews() {
-		dv = new DrawingView(this);
+		dv = new Drawer(this);
+
 		txtv = new EditText(this);
+		txtv.setOnEditorActionListener(this);
 	}
 
 	private void initLayout() {
@@ -67,5 +72,20 @@ public class DrawActivity extends Activity {
 		initViews();
 		setDrawingViewDim(60, 100);
 		initScreenDim();
+		presenter = new DrawPresenterImpl(this);
+	}
+
+	@Override
+	public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+		if (actionId == EditorInfo.IME_ACTION_SEND
+				|| event.getKeyCode() == KeyEvent.KEYCODE_ENTER
+				&& event.getAction() == KeyEvent.ACTION_DOWN)
+			presenter.validateMessage(v.getText().toString());
+		return true;
+	}
+
+	@Override
+	public void onFailure(String msg) {
+
 	}
 }
