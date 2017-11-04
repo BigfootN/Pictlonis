@@ -20,6 +20,7 @@ public class DrawPresenterImpl implements DrawPresenter {
 		if (msg != null)
 			try {
 				interactor.sendMessage(msg);
+
 			} catch (Exception e) {
 				view.onFailure(e.getMessage());
 			}

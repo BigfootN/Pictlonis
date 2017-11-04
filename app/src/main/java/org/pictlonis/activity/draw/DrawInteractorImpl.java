@@ -1,8 +1,8 @@
 package org.pictlonis.activity.draw;
 
 import org.pictlonis.data.GameInformation;
-import org.pictlonis.net.MessageInfo;
-import org.pictlonis.net.NetworkNode;
+import org.pictlonis.net.utils.MessageInfo;
+import org.pictlonis.net.utils.NetworkNode;
 
 /**
  * Created by bigfoot on 03/11/17.

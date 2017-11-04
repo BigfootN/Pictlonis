@@ -9,21 +9,34 @@ import android.view.ViewTreeObserver;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import org.pictlonis.R;
+import org.pictlonis.chat.ChatView;
+import org.pictlonis.chat.ChatViewInteractor;
+import org.pictlonis.chat.ChatViewInteractorImpl;
 
-public class DrawActivity extends Activity implements TextView.OnEditorActionListener, DrawingView{
+public class DrawActivity extends Activity implements TextView.OnEditorActionListener, DrawingView, ChatView{
 	private Drawer dv;
 	private LinearLayout layout;
 	private EditText txtv;
-	private int heightPerc;
-	private int widthPerc;
+	private int drawHeightPerc;
+	private int drawWidthPerc;
+	private int scrollHeightPerc;
+	private int scrollWidthPerc;
 	private DrawPresenter presenter;
+	private ScrollView scrollView;
+	private ChatViewInteractor chatPresenter;
 
 	private void setDrawingViewDim(int heightPerc, int widthPerc) {
-		this.heightPerc = heightPerc;
-		this.widthPerc = widthPerc;
+		drawHeightPerc = heightPerc;
+		drawWidthPerc = widthPerc;
+	}
+
+	private void setScrollViewDim(int heightPerc, int widthPerc) {
+		scrollHeightPerc = heightPerc;
+		scrollWidthPerc = widthPerc;
 	}
 
 	private void initScreenDim() {
@@ -40,14 +53,20 @@ public class DrawActivity extends Activity implements TextView.OnEditorActionLis
 
 					int screenHeight = view.getHeight();
 					int screenWidth = view.getWidth();
-					int dvHeight = (screenHeight * heightPerc) / 100;
-					int dvWidth = (screenWidth * widthPerc) / 100;
+
+					int dvHeight = (screenHeight * drawHeightPerc) / 100;
+					int dvWidth = (screenWidth * drawWidthPerc) / 100;
+
+					int svHeight = (screenHeight * scrollHeightPerc) / 100;
+					int svWidth = (screenHeight * scrollWidthPerc) / 100;
 
 					dv.setLayoutParams(new LinearLayout.LayoutParams(dvWidth, dvHeight));
+					scrollView.setLayoutParams(new LinearLayout.LayoutParams(svWidth, screenHeight));
 					txtv.setLayoutParams(new LinearLayout.LayoutParams(screenWidth, ViewGroup.LayoutParams.WRAP_CONTENT));
 
 					layout.addView(dv, 0);
-					layout.addView(txtv, 1);
+					layout.addView(scrollView, 1);
+					layout.addView(txtv, 2);
 				}
 			});
 		}
@@ -58,6 +77,8 @@ public class DrawActivity extends Activity implements TextView.OnEditorActionLis
 
 		txtv = new EditText(this);
 		txtv.setOnEditorActionListener(this);
+
+		scrollView = new ScrollView(this);
 	}
 
 	private void initLayout() {
@@ -70,9 +91,12 @@ public class DrawActivity extends Activity implements TextView.OnEditorActionLis
 		super.onCreate(savedInstanceState);
 		initLayout();
 		initViews();
-		setDrawingViewDim(60, 100);
+		setDrawingViewDim(50, 100);
+		setScrollViewDim(30, 100);
 		initScreenDim();
+
 		presenter = new DrawPresenterImpl(this);
+		chatPresenter = new ChatViewInteractorImpl(this);
 	}
 
 	@Override
@@ -87,5 +111,10 @@ public class DrawActivity extends Activity implements TextView.OnEditorActionLis
 	@Override
 	public void onFailure(String msg) {
 
+	}
+
+	@Override
+	public ScrollView getScrollView() {
+		return scrollView;
 	}
 }

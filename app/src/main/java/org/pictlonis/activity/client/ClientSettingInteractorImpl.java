@@ -1,7 +1,7 @@
 package org.pictlonis.activity.client;
 
 import org.pictlonis.data.GameInformation;
-import org.pictlonis.net.Client;
+import org.pictlonis.net.client.Client;
 
 /**
  * Created by bigfoot on 31/10/17.

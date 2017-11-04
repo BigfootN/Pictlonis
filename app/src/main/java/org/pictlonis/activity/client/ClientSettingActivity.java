@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 
 import org.pictlonis.R;
+import org.pictlonis.utils.CommonViews;
 
 /**
  * Created by bigfoot on 31/10/17.
@@ -53,7 +54,9 @@ public class ClientSettingActivity extends Activity implements ClientSettingView
 
 	@Override
 	public void onFailure(String msg) {
-		createDialog(msg);
+		AlertDialog.Builder alertDialog;
+
+		alertDialog = CommonViews.createAlertDialogErr(this, "Connexion refusee", msg);
 		alertDialog.show();
 	}
 

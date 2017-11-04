@@ -1,6 +1,6 @@
 package org.pictlonis.activity.client;
 
-import org.pictlonis.Utils;
+import org.pictlonis.utils.Utils;
 
 /**
  * Created by bigfoot on 31/10/17.

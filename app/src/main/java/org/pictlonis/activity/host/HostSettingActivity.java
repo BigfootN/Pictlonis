@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 
 import org.pictlonis.R;
+import org.pictlonis.utils.CommonViews;
 
 /**
  * Created by bigfoot on 31/10/17.
@@ -16,18 +17,10 @@ import org.pictlonis.R;
 
 public class HostSettingActivity extends Activity implements HostSettingView, View.OnClickListener {
 	private RelativeLayout layout;
-	private AlertDialog.Builder alertDialog;
 	private HostSettingPresenter presenter;
 	private EditText portText;
 	private EditText nbClients;
 	private Button validateButton;
-
-	private void createDialog(String msg) {
-		alertDialog = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
-		alertDialog.setTitle("Connexion refusee");
-		alertDialog.setMessage(msg);
-		alertDialog.setIcon(android.R.drawable.ic_dialog_dialer);
-	}
 
 	private void initValButton() {
 		validateButton = (Button) findViewById(R.id.submit_btn);
@@ -60,7 +53,9 @@ public class HostSettingActivity extends Activity implements HostSettingView, Vi
 
 	@Override
 	public void onFailure(String msg) {
-		createDialog(msg);
+		AlertDialog.Builder alertDialog;
+
+		alertDialog = CommonViews.createAlertDialogErr(this, "Erreur creation", msg);
 		alertDialog.show();
 	}
 

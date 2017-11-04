@@ -1,15 +1,16 @@
 package org.pictlonis.data;
 
-import org.pictlonis.net.Client;
-import org.pictlonis.net.NetworkNode;
-import org.pictlonis.net.Server;
+import org.pictlonis.net.client.Client;
+import org.pictlonis.net.utils.NetworkNode;
+import org.pictlonis.net.host.Server;
 
 /**
  * Created by bigfoot on 01/11/17.
  */
 
 public class GameInformation {
-	private static final GameInformation ourInstance = new GameInformation();
+	private static final GameInformation mInstance = new GameInformation();
+	private User mUser;
 
 	public enum NodeType {
 		SERVER,
@@ -25,8 +26,12 @@ public class GameInformation {
 		client = null;
 	}
 
+	public void setUser(User user) {
+		mUser = user;
+	}
+
 	public static GameInformation getInstance() {
-		return ourInstance;
+		return mInstance;
 	}
 
 	public void setInfo(NodeType type, NetworkNode node) {
@@ -49,5 +54,9 @@ public class GameInformation {
 			return server;
 
 		return null;
+	}
+
+	public User getUser() {
+		return mUser;
 	}
 }

@@ -1,6 +1,6 @@
 package org.pictlonis.activity.host;
 
-import org.pictlonis.net.Server;
+import org.pictlonis.net.host.Server;
 
 /**
  * Created by bigfoot on 31/10/17.
