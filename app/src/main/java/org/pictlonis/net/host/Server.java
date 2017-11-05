@@ -1,9 +1,12 @@
 package org.pictlonis.net.host;
 
-import org.pictlonis.net.utils.MessageInfo;
-import org.pictlonis.net.utils.NetworkMessage;
-import org.pictlonis.net.utils.NetworkNode;
-import org.pictlonis.net.utils.NodeType;
+import org.pictlonis.data.GameInformation;
+import org.pictlonis.net.message.MessageInfo;
+import org.pictlonis.net.message.MessageThread;
+import org.pictlonis.net.message.NetworkMessage;
+import org.pictlonis.net.message.NetworkNode;
+import org.pictlonis.net.message.NodeType;
+import org.pictlonis.net.message.PictlonisMessage;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -28,6 +31,15 @@ public class Server implements NetworkNode {
 	private ServerSocketChannel ssocketChannel;
 	private InetSocketAddress addr;
 	private ArrayList<Socket> sclients;
+	private MessageThread msgThread;
+
+	private void sendMaxPlayers(Socket socket) throws Exception {
+		sendMessageTo(PictlonisMessage.maxPlayer(nbClients), socket);
+	}
+
+	private void sendNbConn() throws Exception {
+		NetworkMessage.sendMessage(PictlonisMessage.nbConnected(sclients.size()), sclients);
+	}
 
 	private String readMessage(Socket socket) throws Exception {
 		BufferedReader br;
@@ -56,6 +68,10 @@ public class Server implements NetworkNode {
 		this.port = port;
 		initServer();
 		sclients = new ArrayList<Socket>();
+
+		GameInformation.getInstance().setNode(GameInformation.NodeType.SERVER, this);
+		msgThread = new MessageThread(this);
+		msgThread.readMessages();
 	}
 
 	public void waitForClients() throws Exception {
@@ -81,6 +97,8 @@ public class Server implements NetworkNode {
 					nb_conn++;
 
 					sclients.add(sock_client.socket());
+					sendMaxPlayers(sock_client.socket());
+					sendNbConn();
 				}
 
 				keyIterator.remove();

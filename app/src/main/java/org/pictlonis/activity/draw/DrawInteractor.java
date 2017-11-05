@@ -1,6 +1,6 @@
 package org.pictlonis.activity.draw;
 
-import org.pictlonis.net.utils.MessageInfo;
+import org.pictlonis.net.message.MessageInfo;
 
 /**
  * Created by bigfoot on 03/11/17.

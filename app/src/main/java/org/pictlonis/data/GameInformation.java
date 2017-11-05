@@ -1,7 +1,7 @@
 package org.pictlonis.data;
 
 import org.pictlonis.net.client.Client;
-import org.pictlonis.net.utils.NetworkNode;
+import org.pictlonis.net.message.NetworkNode;
 import org.pictlonis.net.host.Server;
 
 /**
@@ -11,6 +11,8 @@ import org.pictlonis.net.host.Server;
 public class GameInformation {
 	private static final GameInformation mInstance = new GameInformation();
 	private User mUser;
+	private int nbPlayers;
+	private int nbConnected;
 
 	public enum NodeType {
 		SERVER,
@@ -34,7 +36,7 @@ public class GameInformation {
 		return mInstance;
 	}
 
-	public void setInfo(NodeType type, NetworkNode node) {
+	public void setNode(NodeType type, NetworkNode node) {
 		if (type == NodeType.SERVER)
 			server = (Server) node;
 		else if (type == NodeType.CLIENT)
@@ -54,6 +56,22 @@ public class GameInformation {
 			return server;
 
 		return null;
+	}
+
+	public void setNbPlayers(int nbPlayers) {
+		this.nbPlayers = nbPlayers;
+	}
+
+	public int getNbPlayers() {
+		return nbPlayers;
+	}
+
+	public void setNbConnected(int nbConnected) {
+		this.nbConnected = nbConnected;
+	}
+
+	public int getNbConnected() {
+		return nbConnected;
 	}
 
 	public User getUser() {

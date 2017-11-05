@@ -15,6 +15,6 @@ public class ClientSettingInteractorImpl implements ClientSettingInteractor{
 		client = new Client();
 		client.connectTo(ip, port);
 
-		GameInformation.getInstance().setInfo(GameInformation.NodeType.CLIENT, client);
+		GameInformation.getInstance().setNode(GameInformation.NodeType.CLIENT, client);
 	}
 }

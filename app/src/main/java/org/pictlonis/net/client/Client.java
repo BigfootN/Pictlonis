@@ -1,9 +1,11 @@
 package org.pictlonis.net.client;
 
-import org.pictlonis.net.utils.MessageInfo;
-import org.pictlonis.net.utils.NetworkMessage;
-import org.pictlonis.net.utils.NetworkNode;
-import org.pictlonis.net.utils.NodeType;
+import org.pictlonis.data.GameInformation;
+import org.pictlonis.net.message.MessageInfo;
+import org.pictlonis.net.message.MessageThread;
+import org.pictlonis.net.message.NetworkMessage;
+import org.pictlonis.net.message.NetworkNode;
+import org.pictlonis.net.message.NodeType;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,14 +19,20 @@ import java.net.UnknownHostException;
  */
 
 public class Client implements NetworkNode {
-	Socket socket;
-	InetAddress addr;
+	private Socket socket;
+	private InetAddress addr;
+	private MessageThread msgThread;
 
-	public Client() {}
+	public Client() {
+		GameInformation.getInstance().setNode(GameInformation.NodeType.CLIENT, this);
+	}
 
 	public void connectTo(String ip, int port) throws UnknownHostException, IOException {
 		this.addr = InetAddress.getByName(ip);
 		socket = new Socket(this.addr, port);
+
+		msgThread = new MessageThread(this);
+		msgThread.readMessages();
 	}
 
 	@Override
