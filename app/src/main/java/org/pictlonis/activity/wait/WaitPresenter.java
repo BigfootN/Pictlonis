@@ -6,4 +6,5 @@ package org.pictlonis.activity.wait;
 
 public interface WaitPresenter {
 	void informNbPlayer();
+	boolean allPlayersConnected();
 }

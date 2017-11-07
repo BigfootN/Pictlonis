@@ -1,5 +1,6 @@
 package org.pictlonis.activity.host;
 
+import org.pictlonis.data.GameInformation;
 import org.pictlonis.net.host.Server;
 
 /**
@@ -12,5 +13,7 @@ public class HostSettingInteractorImpl implements HostSettingInteractor {
 	@Override
 	public void createServer(int port, int nbClients) throws Exception {
 		server = new Server(port, nbClients);
+		GameInformation.getInstance().setNode(GameInformation.NodeType.SERVER, server);
+		GameInformation.getInstance().setNbPlayers(nbClients);
 	}
 }

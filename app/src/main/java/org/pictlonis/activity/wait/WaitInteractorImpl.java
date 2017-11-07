@@ -1,9 +1,9 @@
 package org.pictlonis.activity.wait;
 
-import android.widget.TextView;
-
 import org.pictlonis.data.GameInformation;
+import org.pictlonis.net.host.Server;
 import org.pictlonis.net.message.NetworkNode;
+import org.pictlonis.net.message.NodeType;
 
 /**
  * Created by bigfoot on 05/11/17.
@@ -14,10 +14,14 @@ public class WaitInteractorImpl extends Thread implements WaitInteractor {
 	int maxPlayer;
 	int nbConn;
 
-	private boolean everybodyConn() {
-		nbConn = GameInformation.getInstance().getNbConnected();
+	private boolean nodeIsServer() {
+		boolean ret;
 
-		return nbConn < maxPlayer;
+		ret = false;
+		if (node.getNodeType() == NodeType.SERVER)
+			ret = true;
+
+		return ret;
 	}
 
 	public WaitInteractorImpl() {
@@ -27,15 +31,35 @@ public class WaitInteractorImpl extends Thread implements WaitInteractor {
 	}
 
 	@Override
-	public void updateNbPlayer(TextView view) throws Exception {
-		String msg;
-
-		while (!everybodyConn()) {
-			msg = (new Integer(nbConn)).toString();
-			msg += " joueurs connectes sur ";
-			msg += (new Integer(maxPlayer)).toString();
-
-			view.setText(msg);
+	public void run() {
+		try {
+			((Server) node).waitForClients();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public void waitPlayers() {
+		if (nodeIsServer()) {
+			start();
+		}
+	}
+
+	@Override
+	public int getNbConn() {
+		return GameInformation.getInstance().getNbConnected();
+	}
+
+	@Override
+	public int getNbPlayers() {
+		return GameInformation.getInstance().getNbPlayers();
+	}
+
+	@Override
+	public boolean everybodyConnected() {
+		nbConn = GameInformation.getInstance().getNbConnected();
+
+		return nbConn == maxPlayer;
 	}
 }

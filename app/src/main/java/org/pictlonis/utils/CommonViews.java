@@ -24,9 +24,9 @@ public class CommonViews {
 		AlertDialog.Builder ret;
 
 		ret = noIconDialog(context, title, msg);
-		ret.setIcon(android.R.drawable.ic_dialog_dialer);
+		ret.setIcon(android.R.drawable.ic_dialog_alert);
 
-		return null;
+		return ret;
 	}
 
 	public static AlertDialog.Builder createAlertDialog(Context context, int icon, String title, String msg) {
@@ -35,7 +35,7 @@ public class CommonViews {
 		ret = noIconDialog(context, title, msg);
 		ret.setIcon(icon);
 
-		return null;
+		return ret;
 	}
 
 	public static TextView createChatMessage(Context ctx, String msg, int gravity) {

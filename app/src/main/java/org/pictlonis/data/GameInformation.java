@@ -26,6 +26,8 @@ public class GameInformation {
 	private GameInformation() {
 		server = null;
 		client = null;
+		nbPlayers = 0;
+		nbConnected = 0;
 	}
 
 	public void setUser(User user) {

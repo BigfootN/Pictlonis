@@ -7,4 +7,5 @@ package org.pictlonis.activity.wait;
 public interface WaitView {
 	void onAllConnected();
 	void onFailure(String msg);
+	void setNbPlayer(String msg);
 }

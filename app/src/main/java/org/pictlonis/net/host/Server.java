@@ -1,6 +1,5 @@
 package org.pictlonis.net.host;
 
-import org.pictlonis.data.GameInformation;
 import org.pictlonis.net.message.MessageInfo;
 import org.pictlonis.net.message.MessageThread;
 import org.pictlonis.net.message.NetworkMessage;
@@ -59,6 +58,7 @@ public class Server implements NetworkNode {
 		addr = new InetSocketAddress(port);
 
 		ssocketChannel = ServerSocketChannel.open();
+		ssocketChannel.configureBlocking(false);
 		ssocketChannel.socket().bind(addr);
 		ssocketChannel.register(selector, ssocketChannel.validOps());
 	}
@@ -69,7 +69,6 @@ public class Server implements NetworkNode {
 		initServer();
 		sclients = new ArrayList<Socket>();
 
-		GameInformation.getInstance().setNode(GameInformation.NodeType.SERVER, this);
 		msgThread = new MessageThread(this);
 		msgThread.readMessages();
 	}

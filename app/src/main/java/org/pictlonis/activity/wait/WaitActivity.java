@@ -3,6 +3,7 @@ package org.pictlonis.activity.wait;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -17,6 +18,34 @@ public class WaitActivity extends Activity implements WaitView {
 	private int nbConnected;
 	private ProgressBar progBar;
 	private TextView txtView;
+	private WaitPresenter presenter;
+	Handler handler;
+
+	private void initPresenter() {
+		handler = new Handler();
+		presenter = new WaitPresenterImpl(this);
+
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				while (!presenter.allPlayersConnected()) {
+					try {
+						Thread.sleep(500);
+						handler.post(new Runnable() {
+
+							@Override
+							public void run() {
+								presenter.informNbPlayer();
+
+							}
+						});
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}).start();
+	}
 
 	private void initLayout() {
 		setContentView(R.layout.wait_layout);
@@ -29,6 +58,7 @@ public class WaitActivity extends Activity implements WaitView {
 		progBar = findViewById(R.id.progressBar);
 		txtView = findViewById(R.id.nbConnText);
 		nbConnected = 0;
+		initPresenter();
 	}
 
 	@Override
@@ -42,5 +72,10 @@ public class WaitActivity extends Activity implements WaitView {
 	@Override
 	public void onFailure(String msg) {
 
+	}
+
+	@Override
+	public void setNbPlayer(String msg) {
+		txtView.setText(msg);
 	}
 }
