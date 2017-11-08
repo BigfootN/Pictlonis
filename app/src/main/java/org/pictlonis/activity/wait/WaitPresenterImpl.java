@@ -4,7 +4,7 @@ package org.pictlonis.activity.wait;
  * Created by bigfoot on 05/11/17.
  */
 
-public class WaitPresenterImpl extends Thread implements WaitPresenter {
+public class WaitPresenterImpl implements WaitPresenter {
 	private WaitInteractor interactor;
 	private WaitView view;
 	private int nbPlayers;
@@ -24,11 +24,6 @@ public class WaitPresenterImpl extends Thread implements WaitPresenter {
 		this.view = view;
 		nbPlayers = interactor.getNbPlayers();
 		interactor.waitPlayers();
-	}
-
-	@Override
-	public void run() {
-
 	}
 
 	@Override

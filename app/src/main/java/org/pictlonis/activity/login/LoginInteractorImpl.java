@@ -1,8 +1,5 @@
 package org.pictlonis.activity.login;
 
-import org.pictlonis.data.GameInformation;
-import org.pictlonis.data.User;
-
 /**
  * Created by bigfoot on 04/11/17.
  */
@@ -10,10 +7,7 @@ import org.pictlonis.data.User;
 public class LoginInteractorImpl implements LoginInteractor {
 
 	@Override
-	public void saveUserName(String name) {
-		User user;
+	public void verifyLogin(String uname, String pwd) {
 
-		user = new User(name);
-		GameInformation.getInstance().setUser(user);
 	}
 }

@@ -1,17 +1,17 @@
 package org.pictlonis.data;
 
+import java.io.Serializable;
+
 /**
- * Created by bigfoot on 03/11/17.
+ * Created by bigfoot on 08/11/17.
  */
 
-public class User {
-	private String name;
+public class User implements Serializable {
+	public String uname;
+	public int pwdHash;
 
-	public User(String name) {
-		this.name = name;
-	}
-
-	public String getName() {
-		return name;
+	public User(String uname, String pwd) {
+		this.uname = uname;
+		this.pwdHash = pwd.hashCode();
 	}
 }

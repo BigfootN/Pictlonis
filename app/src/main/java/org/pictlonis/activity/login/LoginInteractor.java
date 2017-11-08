@@ -5,5 +5,5 @@ package org.pictlonis.activity.login;
  */
 
 public interface LoginInteractor {
-	void saveUserName(String name);
+	void verifyLogin(String uname, String pwd);
 }

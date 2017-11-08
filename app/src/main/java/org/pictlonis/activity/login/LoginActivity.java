@@ -2,6 +2,7 @@ package org.pictlonis.activity.login;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 
 import org.pictlonis.R;
@@ -11,7 +12,9 @@ import org.pictlonis.R;
  */
 
 public class LoginActivity extends Activity implements LoginView {
-	RelativeLayout layout;
+	private RelativeLayout layout;
+	private EditText uName;
+	private EditText pwd;
 
 	private void initLayout() {
 		setContentView(R.layout.login_layout);
@@ -22,6 +25,8 @@ public class LoginActivity extends Activity implements LoginView {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		initLayout();
+		uName = findViewById(R.id.uname_in);
+		pwd = findViewById(R.id.pwd_in);
 	}
 
 	@Override

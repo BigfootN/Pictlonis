@@ -7,4 +7,5 @@
     <string name="clt_btn_title">Client</string>
     <string name="host_btn_title">Heberger</string>
     <string name="name_hint">Nom d\'utilisateur</string>
+    <string name="pwd_hint">Mot de passe</string>
 </resources>
