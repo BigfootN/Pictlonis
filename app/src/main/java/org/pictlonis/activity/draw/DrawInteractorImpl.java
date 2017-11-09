@@ -2,7 +2,7 @@ package org.pictlonis.activity.draw;
 
 import org.pictlonis.data.GameInformation;
 import org.pictlonis.net.message.MessageInfo;
-import org.pictlonis.net.message.NetworkNode;
+import org.pictlonis.net.NetworkNode;
 
 /**
  * Created by bigfoot on 03/11/17.

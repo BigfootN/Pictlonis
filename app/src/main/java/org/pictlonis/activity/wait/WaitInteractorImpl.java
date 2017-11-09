@@ -2,8 +2,8 @@ package org.pictlonis.activity.wait;
 
 import org.pictlonis.data.GameInformation;
 import org.pictlonis.net.host.Server;
-import org.pictlonis.net.message.NetworkNode;
-import org.pictlonis.net.message.NodeType;
+import org.pictlonis.net.NetworkNode;
+import org.pictlonis.net.NodeType;
 
 /**
  * Created by bigfoot on 05/11/17.

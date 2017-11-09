@@ -1,5 +1,7 @@
 package org.pictlonis.net.message;
 
+import org.pictlonis.net.NetworkNode;
+
 /**
  * Created by bigfoot on 05/11/17.
  */

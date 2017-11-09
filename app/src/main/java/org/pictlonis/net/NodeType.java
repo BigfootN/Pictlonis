@@ -1,4 +1,4 @@
-package org.pictlonis.net.message;
+package org.pictlonis.net;
 
 /**
  * Created by bigfoot on 01/11/17.

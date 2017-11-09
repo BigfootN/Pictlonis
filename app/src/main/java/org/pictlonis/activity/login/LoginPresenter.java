@@ -5,5 +5,5 @@ package org.pictlonis.activity.login;
  */
 
 public interface LoginPresenter {
-	void validateLogin(String name);
+	void validateLogin(String uname, String pwd);
 }

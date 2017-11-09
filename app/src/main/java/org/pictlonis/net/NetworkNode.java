@@ -1,4 +1,6 @@
-package org.pictlonis.net.message;
+package org.pictlonis.net;
+
+import org.pictlonis.net.message.MessageInfo;
 
 /**
  * Created by bigfoot on 01/11/17.

@@ -1,8 +1,12 @@
 package org.pictlonis.data;
 
+import android.content.Context;
+
+import org.pictlonis.net.NetworkNode;
 import org.pictlonis.net.client.Client;
-import org.pictlonis.net.message.NetworkNode;
 import org.pictlonis.net.host.Server;
+
+import java.io.File;
 
 /**
  * Created by bigfoot on 01/11/17.
@@ -13,6 +17,8 @@ public class GameInformation {
 	private User mUser;
 	private int nbPlayers;
 	private int nbConnected;
+	private Context ctx;
+	private final File USERS_FILE = new File(ctx.getFilesDir(),"users.dat");
 
 	public enum NodeType {
 		SERVER,
@@ -30,12 +36,20 @@ public class GameInformation {
 		nbConnected = 0;
 	}
 
+	public File getUsersFile() {
+		return USERS_FILE;
+	}
+
 	public void setUser(User user) {
 		mUser = user;
 	}
 
 	public static GameInformation getInstance() {
 		return mInstance;
+	}
+
+	public void setContext(Context ctx) {
+		this.ctx = ctx;
 	}
 
 	public void setNode(NodeType type, NetworkNode node) {

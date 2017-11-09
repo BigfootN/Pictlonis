@@ -3,8 +3,8 @@ package org.pictlonis.net.host;
 import org.pictlonis.net.message.MessageInfo;
 import org.pictlonis.net.message.MessageThread;
 import org.pictlonis.net.message.NetworkMessage;
-import org.pictlonis.net.message.NetworkNode;
-import org.pictlonis.net.message.NodeType;
+import org.pictlonis.net.NetworkNode;
+import org.pictlonis.net.NodeType;
 import org.pictlonis.net.message.PictlonisMessage;
 
 import java.io.BufferedReader;

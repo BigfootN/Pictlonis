@@ -1,5 +1,6 @@
 package org.pictlonis.data;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
@@ -34,22 +35,26 @@ public class UserList extends Vector {
 		add(u);
 	}
 
-	public void saveToFile(String fileName) throws Exception {
+	public void saveToFile(File file) throws Exception {
 		FileOutputStream fos;
 		ObjectOutputStream oos;
+		String filePath;
 
-		fos = new FileOutputStream(fileName);
+		filePath = file.getAbsolutePath();
+		fos = new FileOutputStream(filePath);
 		oos = new ObjectOutputStream(fos);
 		oos.writeObject(this);
 		oos.close();
 	}
 
-	public void createFromFile(String fileName) throws Exception {
+	public void replaceFromFile(File file) throws Exception {
 		FileInputStream fis;
 		ObjectInputStream ois;
 		UserList uList;
+		String filePath;
 
-		fis = new FileInputStream(fileName);
+		filePath = file.getAbsolutePath();
+		fis = new FileInputStream(filePath);
 		ois = new ObjectInputStream(fis);
 		uList = (UserList) ois.readObject();
 

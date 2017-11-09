@@ -5,5 +5,5 @@ package org.pictlonis.activity.login;
  */
 
 public interface LoginInteractor {
-	void verifyLogin(String uname, String pwd);
+	boolean loginIsValid(String uname, String pwd);
 }
