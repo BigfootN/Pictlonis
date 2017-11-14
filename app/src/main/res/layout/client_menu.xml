@@ -11,8 +11,8 @@
         android:layout_height="50dp"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
-        android:hint="@string/ip_hint"
-        android:inputType="text"/>
+        android:hint="@string/port_hint"
+        android:inputType="number"/>
 
     <EditText
         android:id="@+id/ip_in"
@@ -21,8 +21,8 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginTop="84dp"
-        android:hint="@string/port_hint"
-        android:inputType="number"/>
+        android:hint="@string/ip_hint"
+        android:inputType="text"/>
 
 
     <Button
