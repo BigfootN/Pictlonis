@@ -1,6 +1,7 @@
 package org.pictlonis.net.message;
 
 import java.net.Socket;
+import java.nio.channels.SocketChannel;
 
 /**
  * Created by bigfoot on 02/11/17.
@@ -8,14 +9,14 @@ import java.net.Socket;
 
 public class MessageInfo {
 	private String message;
-	private Socket socket;
+	private SocketChannel socket;
 
-	public MessageInfo(String message, Socket from) {
+	public MessageInfo(String message, SocketChannel from) {
 		this.message = message;
 		this.socket = from;
 	}
 
-	public Socket getFrom() {
+	public SocketChannel getFrom() {
 		return socket;
 	}
 

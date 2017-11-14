@@ -40,7 +40,7 @@ public class DrawActivity extends Activity implements TextView.OnEditorActionLis
 	}
 
 	private void initScreenDim() {
-		final View view = findViewById(R.id.main_layout);
+		final View view = findViewById(R.id.drawing_layout);
 		ViewTreeObserver viewTreeObserver;
 
 		viewTreeObserver = view.getViewTreeObserver();
@@ -82,8 +82,8 @@ public class DrawActivity extends Activity implements TextView.OnEditorActionLis
 	}
 
 	private void initLayout() {
-		setContentView(R.layout.main_layout);
-		layout = findViewById(R.id.main_layout);
+		setContentView(R.layout.main_menu);
+		layout = findViewById(R.id.drawing_layout);
 	}
 
 	@Override

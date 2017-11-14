@@ -40,9 +40,10 @@ public class ClientSettingActivity extends Activity implements ClientSettingView
 		super.onCreate(savedInstanceState);
 		initLayout();
 
-		submitBtn = layout.findViewById(R.id.submit_btn);
 		ipTxt = layout.findViewById(R.id.ip_in);
 		portTxt = layout.findViewById(R.id.port_in);
+		submitBtn = layout.findViewById(R.id.submit_btn);
+		submitBtn.setOnClickListener(this);
 
 		presenter = new ClientSettingPresenterImpl(this);
 	}

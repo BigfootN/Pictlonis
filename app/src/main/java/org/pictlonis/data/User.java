@@ -7,11 +7,46 @@ import java.io.Serializable;
  */
 
 public class User implements Serializable {
-	public String uname;
-	public int pwdHash;
+	private String uname;
+	private int pwdHash;
 
 	public User(String uname, String pwd) {
 		this.uname = uname;
 		this.pwdHash = pwd.hashCode();
+	}
+
+	public int getPwdHash() {
+		return pwdHash;
+	}
+
+	public String getName() {
+		return uname;
+	}
+
+	@Override
+	public int hashCode() {
+		int ret;
+
+		ret = 1;
+		ret = ret * 17 + uname.hashCode();
+		ret = ret * 31 + pwdHash;
+
+		return ret;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		boolean ret;
+		User user;
+
+		ret = false;
+		if (o != null && o instanceof User) {
+			user = (User) o;
+			if (user.getName().equals(uname)
+					&& user.getPwdHash() == pwdHash)
+				ret = true;
+		}
+
+		return ret;
 	}
 }

@@ -8,4 +8,6 @@
     <string name="host_btn_title">Heberger</string>
     <string name="name_hint">Nom d\'utilisateur</string>
     <string name="pwd_hint">Mot de passe</string>
+    <string name="sub_btn_title">S\'inscrire</string>
+    <string name="login_btn_title">Se connecter</string>
 </resources>

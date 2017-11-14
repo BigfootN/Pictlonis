@@ -8,15 +8,18 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.pictlonis.R;
+import org.pictlonis.activity.client.ClientSettingActivity;
 import org.pictlonis.activity.draw.DrawActivity;
+import org.pictlonis.activity.host.HostSettingActivity;
+import org.pictlonis.data.GameInformation;
 
 /**
  * Created by bigfoot on 05/11/17.
  */
 
 public class WaitActivity extends Activity implements WaitView {
-	private int nbConnected;
-	private ProgressBar progBar;
+	//private int nbConnected;
+	//private ProgressBar progBar;
 	private TextView txtView;
 	private WaitPresenter presenter;
 	Handler handler;
@@ -55,9 +58,9 @@ public class WaitActivity extends Activity implements WaitView {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		initLayout();
-		progBar = findViewById(R.id.progressBar);
+		//progBar = findViewById(R.id.progressBar);
 		txtView = findViewById(R.id.nbConnText);
-		nbConnected = 0;
+		//nbConnected = 0;
 		initPresenter();
 	}
 
@@ -77,5 +80,25 @@ public class WaitActivity extends Activity implements WaitView {
 	@Override
 	public void setNbPlayer(String msg) {
 		txtView.setText(msg);
+	}
+
+	@Override
+	public void onBackPressed() {
+		Intent i;
+		GameInformation inst;
+
+		inst = GameInformation.getInstance();
+		try {
+			GameInformation.getInstance().getNode().close();
+			if (inst.getGameType() == GameInformation.NodeType.CLIENT)
+				i = new Intent(this, ClientSettingActivity.class);
+			else
+				i = new Intent(this, HostSettingActivity.class);
+
+			inst.setNbConnected(0);
+			startActivity(i);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

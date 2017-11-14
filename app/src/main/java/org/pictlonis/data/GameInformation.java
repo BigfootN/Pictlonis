@@ -18,7 +18,7 @@ public class GameInformation {
 	private int nbPlayers;
 	private int nbConnected;
 	private Context ctx;
-	private final File USERS_FILE = new File(ctx.getFilesDir(),"users.dat");
+	private File USERS_FILE;
 
 	public enum NodeType {
 		SERVER,
@@ -48,8 +48,10 @@ public class GameInformation {
 		return mInstance;
 	}
 
-	public void setContext(Context ctx) {
+	public void setContext(Context ctx) throws Exception {
 		this.ctx = ctx;
+		USERS_FILE = new File(ctx.getFilesDir(),"users.dat");
+		USERS_FILE.createNewFile();
 	}
 
 	public void setNode(NodeType type, NetworkNode node) {

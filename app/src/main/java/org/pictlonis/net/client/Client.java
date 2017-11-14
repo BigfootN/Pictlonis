@@ -11,25 +11,27 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.nio.channels.SocketChannel;
 
 /**
  * Created by bigfoot on 30/10/17.
  */
 
 public class Client implements NetworkNode {
-	private Socket socket;
-	private InetAddress addr;
+	private SocketChannel socket;
+	private InetSocketAddress addr;
 	private MessageThread msgThread;
 
 	public Client() {
 		GameInformation.getInstance().setNode(GameInformation.NodeType.CLIENT, this);
 	}
 
-	public void connectTo(String ip, int port) throws UnknownHostException, IOException {
-		this.addr = InetAddress.getByName(ip);
-		socket = new Socket(this.addr, port);
+	public void connectTo(String ip, int port) throws IOException {
+		this.addr = new InetSocketAddress(ip, port);
+		socket = SocketChannel.open(addr);
 
 		msgThread = new MessageThread(this);
 		msgThread.readMessages();
@@ -40,15 +42,8 @@ public class Client implements NetworkNode {
 		MessageInfo ret;
 		String msg;
 
-		InputStreamReader stream;
-		BufferedReader reader;
-
-		stream = new InputStreamReader(socket.getInputStream());
-		reader = new BufferedReader(stream);
-
-
-		msg = reader.readLine();
-		ret = new MessageInfo(msg, null);
+		msg = NetworkMessage.readMessage(socket);
+		ret = new MessageInfo(msg, socket);
 
 		return ret;
 	}

@@ -1,5 +1,6 @@
 package org.pictlonis.net.host;
 
+import org.pictlonis.data.GameInformation;
 import org.pictlonis.net.message.MessageInfo;
 import org.pictlonis.net.message.MessageThread;
 import org.pictlonis.net.message.NetworkMessage;
@@ -11,13 +12,17 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
+import java.security.Key;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.ListIterator;
 import java.util.Set;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Created by bigfoot on 30/10/17.
@@ -29,28 +34,15 @@ public class Server implements NetworkNode {
 	private Selector selector;
 	private ServerSocketChannel ssocketChannel;
 	private InetSocketAddress addr;
-	private ArrayList<Socket> sclients;
+	private ArrayList<SocketChannel> sclients;
 	private MessageThread msgThread;
 
-	private void sendMaxPlayers(Socket socket) throws Exception {
+	private void sendMaxPlayers(SocketChannel socket) throws Exception {
 		sendMessageTo(PictlonisMessage.maxPlayer(nbClients), socket);
 	}
 
 	private void sendNbConn() throws Exception {
 		NetworkMessage.sendMessage(PictlonisMessage.nbConnected(sclients.size()), sclients);
-	}
-
-	private String readMessage(Socket socket) throws Exception {
-		BufferedReader br;
-		InputStreamReader isr;
-		String ret;
-
-		isr = new InputStreamReader(socket.getInputStream());
-		br = new BufferedReader(isr);
-		ret = br.readLine();
-
-		br.close();
-		return ret;
 	}
 
 	private void initServer() throws Exception {
@@ -67,7 +59,7 @@ public class Server implements NetworkNode {
 		this.nbClients = nbClients;
 		this.port = port;
 		initServer();
-		sclients = new ArrayList<Socket>();
+		sclients = new ArrayList<SocketChannel>();
 
 		msgThread = new MessageThread(this);
 		msgThread.readMessages();
@@ -75,34 +67,50 @@ public class Server implements NetworkNode {
 
 	public void waitForClients() throws Exception {
 		int nb_conn;
+		SocketChannel schannel;
+		Set<SelectionKey> keys;
+		Iterator<SelectionKey> it;
+		SelectionKey key;
+
 
 		nb_conn = 0;
+
 		while (nb_conn < nbClients) {
 			selector.select();
+			keys = selector.selectedKeys();
+			it = keys.iterator();
 
-			Set<SelectionKey> selectionKeys = selector.selectedKeys();
-			Iterator<SelectionKey> keyIterator = selectionKeys.iterator();
-			ssocketChannel.configureBlocking(true);
+			while (nb_conn < nbClients && it.hasNext()) {
+				key = it.next();
 
-			while (keyIterator.hasNext()) {
-				SelectionKey key = keyIterator.next();
-
-				if (key.isAcceptable()) {
-					SocketChannel sock_client;
-
-					sock_client = ssocketChannel.accept();
-					sock_client.configureBlocking(false);
-					sock_client.register(selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE);
-					nb_conn++;
-
-					sclients.add(sock_client.socket());
-					sendMaxPlayers(sock_client.socket());
-					sendNbConn();
+				if (!key.isValid()) {
+					it.remove();
+					continue;
 				}
 
-				keyIterator.remove();
+				if (key.isAcceptable()) {
+					schannel = ssocketChannel.accept();
+					schannel.configureBlocking(false);
+
+					selector.wakeup();
+					schannel.register(selector, SelectionKey.OP_READ);
+
+					sclients.add(schannel);
+					sendMaxPlayers(schannel);
+					sendNbConn();
+					nb_conn++;
+					GameInformation.getInstance().setNbConnected(nb_conn);
+				}
+
+				synchronized (this) {
+					it.remove();
+				}
 			}
+
+			this.wait(500);
 		}
+
+
 	}
 
 	@Override
@@ -122,12 +130,10 @@ public class Server implements NetworkNode {
 
 				if (key.isReadable()) {
 					SocketChannel sock_client;
-					Socket socket;
 
 					sock_client = (SocketChannel) key.channel();
-					socket = sock_client.socket();
-					msg = readMessage(socket);
-					ret = new MessageInfo(msg, socket);
+					msg = NetworkMessage.readMessage(sock_client);
+					ret = new MessageInfo(msg, sock_client);
 				}
 
 				keyIterator.remove();
@@ -144,6 +150,15 @@ public class Server implements NetworkNode {
 
 	@Override
 	public void close() throws Exception {
+		Iterator<SocketChannel> itSock;
+		SocketChannel curSock;
+
+		itSock = sclients.iterator();
+		while (itSock.hasNext()) {
+			curSock = itSock.next();
+			curSock.close();
+		}
+
 		ssocketChannel.close();
 	}
 
@@ -151,14 +166,18 @@ public class Server implements NetworkNode {
 		NetworkMessage.sendMessage(msg, sock);
 	}
 
+	public void sendMessageTo(String msg, SocketChannel sock) throws Exception {
+		NetworkMessage.sendMessage(msg, sock);
+	}
+
 	public void sendMessage(String msg) throws Exception {
 		NetworkMessage.sendMessage(msg, sclients);
 	}
 
-	public void sendMessageFrom(String msg, Socket sock) throws Exception {
-		ArrayList<Socket> tmp_list;
+	public void sendMessageFrom(String msg, SocketChannel sock) throws Exception {
+		ArrayList<SocketChannel> tmp_list;
 
-		tmp_list = new ArrayList<Socket>(sclients);
+		tmp_list = new ArrayList<SocketChannel>(sclients);
 		tmp_list.remove(sock);
 
 		NetworkMessage.sendMessage(msg, tmp_list);

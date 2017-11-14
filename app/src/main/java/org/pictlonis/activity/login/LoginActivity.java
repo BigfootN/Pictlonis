@@ -10,7 +10,8 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 
 import org.pictlonis.R;
-import org.pictlonis.activity.menu.MenuActivity;
+import org.pictlonis.activity.netmenu.NetMenuActivity;
+import org.pictlonis.data.GameInformation;
 import org.pictlonis.utils.CommonViews;
 
 /**
@@ -48,7 +49,7 @@ public class LoginActivity extends Activity implements LoginView, View.OnClickLi
 	public void onSuccess() {
 		Intent i;
 
-		i = new Intent(this, MenuActivity.class);
+		i = new Intent(this, NetMenuActivity.class);
 		startActivity(i);
 	}
 

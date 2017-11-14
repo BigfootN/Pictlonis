@@ -5,6 +5,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Vector;
 
@@ -12,27 +14,27 @@ import java.util.Vector;
  * Created by bigfoot on 03/11/17.
  */
 
-public class UserList extends Vector {
+public class UserList implements Serializable {
+	private ArrayList<User> users;
 
-	private void replaceList(UserList list) {
+	private void replaceList(ArrayList<User> newList) {
 		Iterator<User> it;
 		User curUser;
 
-		removeAllElements();
-
-		it = list.iterator();
+		users.clear();
+		it = newList.iterator();
 		while (it.hasNext()) {
 			curUser = it.next();
-			add(curUser);
+			users.add(curUser);
 		}
 	}
 
 	public UserList() {
-		super();
+		users = new ArrayList<User>();
 	}
 
 	public void put(User u) {
-		add(u);
+		users.add(u);
 	}
 
 	public void saveToFile(File file) throws Exception {
@@ -43,25 +45,29 @@ public class UserList extends Vector {
 		filePath = file.getAbsolutePath();
 		fos = new FileOutputStream(filePath);
 		oos = new ObjectOutputStream(fos);
-		oos.writeObject(this);
+		oos.writeObject(users);
 		oos.close();
 	}
 
 	public void replaceFromFile(File file) throws Exception {
 		FileInputStream fis;
 		ObjectInputStream ois;
-		UserList uList;
+		ArrayList<User> uList;
 		String filePath;
 
-		filePath = file.getAbsolutePath();
-		fis = new FileInputStream(filePath);
-		ois = new ObjectInputStream(fis);
-		uList = (UserList) ois.readObject();
+		if (file.length() > 0) {
+			filePath = file.getAbsolutePath();
+			fis = new FileInputStream(filePath);
+			ois = new ObjectInputStream(fis);
+			uList = (ArrayList<User>) ois.readObject();
+			replaceList(uList);
+		} else {
+			users = new ArrayList<User>();
+		}
 
-		replaceList(uList);
 	}
 
 	public boolean userExists(User u) {
-		return contains(u);
+		return users.contains(u);
 	}
 }
