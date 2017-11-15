@@ -24,14 +24,17 @@ public class Client implements NetworkNode {
 	private SocketChannel socket;
 	private InetSocketAddress addr;
 	private MessageThread msgThread;
+	NetworkConnect netConn;
 
 	public Client() {
+		netConn = new NetworkConnect();
 		GameInformation.getInstance().setNode(GameInformation.NodeType.CLIENT, this);
 	}
 
-	public void connectTo(String ip, int port) throws IOException {
+	public void connectTo(String ip, int port) throws Exception {
 		this.addr = new InetSocketAddress(ip, port);
-		socket = SocketChannel.open(addr);
+		netConn.execute(addr);
+		socket = netConn.get();
 
 		msgThread = new MessageThread(this);
 		msgThread.readMessages();
