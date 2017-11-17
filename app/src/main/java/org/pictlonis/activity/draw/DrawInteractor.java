@@ -8,5 +8,5 @@ import org.pictlonis.net.message.MessageInfo;
 
 public interface DrawInteractor {
 	void sendMessage(String msg) throws Exception;
-	MessageInfo getMessage() throws Exception;
+	String getMessage() throws Exception;
 }

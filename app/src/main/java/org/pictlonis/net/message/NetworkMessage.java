@@ -20,6 +20,18 @@ public class NetworkMessage {
 		return str.endsWith(System.lineSeparator());
 	}
 
+	private static String rmEndMsg(String msg) {
+		int firstIdx;
+		int lastIdx;
+		String ret;
+
+		firstIdx = 0;
+		lastIdx = msg.length() - System.lineSeparator().length();
+		ret = msg.substring(firstIdx, lastIdx);
+
+		return ret;
+	}
+
 	public static void sendMessage(String message, Socket socket) throws Exception {
 		OutputStream os;
 		OutputStreamWriter osw;
@@ -38,8 +50,14 @@ public class NetworkMessage {
 		String msgToSend;
 
 		msgToSend = message + System.lineSeparator();
-		buffer = ByteBuffer.wrap(msgToSend.getBytes());
-		socket.write(buffer);
+		buffer = ByteBuffer.allocate(msgToSend.getBytes().length);
+		buffer.clear();
+		buffer.put(msgToSend.getBytes());
+		buffer.flip();
+
+		while (buffer.hasRemaining()) {
+			socket.write(buffer);
+		}
 	}
 
 	public static void sendMessage(String message, ArrayList<SocketChannel> sockets) throws Exception{
@@ -51,17 +69,23 @@ public class NetworkMessage {
 		}
 	}
 
-	public static String readMessage(SocketChannel socket) throws IOException {
+	public static String readMessage(SocketChannel socket) {
 		String ret;
 		ByteBuffer buffer;
 
 		ret = "";
 		do {
 			buffer = ByteBuffer.allocate(1);
-			socket.read(buffer);
+			try {
+				socket.read(buffer);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 
-			ret.concat(new String(buffer.array()));
+			ret += new String(buffer.array());
 		} while (!isLastMessage(ret));
+
+		ret = rmEndMsg(ret);
 
 		return ret;
 	}

@@ -18,8 +18,6 @@ import org.pictlonis.data.GameInformation;
  */
 
 public class WaitActivity extends Activity implements WaitView {
-	//private int nbConnected;
-	//private ProgressBar progBar;
 	private TextView txtView;
 	private WaitPresenter presenter;
 	Handler handler;
@@ -58,9 +56,7 @@ public class WaitActivity extends Activity implements WaitView {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		initLayout();
-		//progBar = findViewById(R.id.progressBar);
 		txtView = findViewById(R.id.nbConnText);
-		//nbConnected = 0;
 		initPresenter();
 	}
 

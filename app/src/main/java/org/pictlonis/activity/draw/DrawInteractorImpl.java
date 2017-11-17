@@ -22,7 +22,7 @@ public class DrawInteractorImpl implements DrawInteractor {
 	}
 
 	@Override
-	public MessageInfo getMessage() throws Exception {
+	public String getMessage() throws Exception {
 		return node.getMessage();
 	}
 }

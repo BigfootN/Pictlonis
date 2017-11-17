@@ -40,7 +40,7 @@ public class ClientSettingPresenterImpl implements ClientSettingPresenter {
 		if (!isValidIp(ip))
 			view.onFailure("Addresse IP incorrecte!");
 		else if (!isValidPort(port))
-			view.onFailure("Port icorrecte !");
+			view.onFailure("Port incorrecte !");
 		else {
 			try {
 				interactor.connect(ip, portParsed);

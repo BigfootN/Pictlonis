@@ -16,6 +16,7 @@ import org.pictlonis.R;
 import org.pictlonis.chat.ChatView;
 import org.pictlonis.chat.ChatViewInteractor;
 import org.pictlonis.chat.ChatViewInteractorImpl;
+import org.pictlonis.data.GameInformation;
 
 public class DrawActivity extends Activity implements TextView.OnEditorActionListener, DrawingView, ChatView{
 	private Drawer dv;
@@ -74,6 +75,7 @@ public class DrawActivity extends Activity implements TextView.OnEditorActionLis
 
 	private void initViews() {
 		dv = new Drawer(this);
+		GameInformation.getInstance().setDrawer(dv);
 
 		txtv = new EditText(this);
 		txtv.setOnEditorActionListener(this);

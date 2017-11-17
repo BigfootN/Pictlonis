@@ -7,13 +7,8 @@ import org.pictlonis.net.message.NetworkMessage;
 import org.pictlonis.net.NetworkNode;
 import org.pictlonis.net.NodeType;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.net.UnknownHostException;
 import java.nio.channels.SocketChannel;
 
 /**
@@ -41,12 +36,10 @@ public class Client implements NetworkNode {
 	}
 
 	@Override
-	public MessageInfo getMessage() throws IOException {
-		MessageInfo ret;
-		String msg;
+	public String getMessage() throws Exception {
+		String ret;
 
-		msg = NetworkMessage.readMessage(socket);
-		ret = new MessageInfo(msg, socket);
+		ret = NetworkMessage.readMessage(socket);
 
 		return ret;
 	}

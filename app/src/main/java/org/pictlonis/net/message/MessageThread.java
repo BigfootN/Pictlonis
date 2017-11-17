@@ -8,9 +8,11 @@ import org.pictlonis.net.NetworkNode;
 
 public class MessageThread extends Thread {
 	private NetworkNode node;
+	private MessageAction msgAction;
 
 	public MessageThread(NetworkNode node) {
 		this.node = node;
+		msgAction = new MessageActionImpl();
 	}
 
 	public void readMessages() {
@@ -19,17 +21,20 @@ public class MessageThread extends Thread {
 
 	@Override
 	public void run() {
-		MessageInfo msg;
+		String msg;
+		MessageInfo<?> msgInfo;
 		boolean run;
 
 		run = true;
 		while (run) {
 			try {
 				msg = node.getMessage();
-				PictlonisMessage.saveInfoMessage(msg.getMessage());
+				msgInfo = PictlonisMessage.getInfoMessage(msg);
+				msgAction.takeAction(msgInfo);
 
 				sleep(50);
 			} catch (Exception e) {
+				e.printStackTrace();
 				run = false;
 			}
 		}

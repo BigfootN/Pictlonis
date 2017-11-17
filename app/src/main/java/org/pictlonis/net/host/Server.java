@@ -8,21 +8,15 @@ import org.pictlonis.net.NetworkNode;
 import org.pictlonis.net.NodeType;
 import org.pictlonis.net.message.PictlonisMessage;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
-import java.security.Key;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.ListIterator;
 import java.util.Set;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Created by bigfoot on 30/10/17.
@@ -107,16 +101,17 @@ public class Server implements NetworkNode {
 				}
 			}
 
-			this.wait(500);
+			synchronized (this) {
+				this.wait(500);
+			}
 		}
 
 
 	}
 
 	@Override
-	public MessageInfo getMessage() throws Exception {
-		MessageInfo ret;
-		String msg;
+	public String getMessage() throws Exception {
+		String ret;
 
 		ret = null;
 		while (ret == null) {
@@ -132,8 +127,7 @@ public class Server implements NetworkNode {
 					SocketChannel sock_client;
 
 					sock_client = (SocketChannel) key.channel();
-					msg = NetworkMessage.readMessage(sock_client);
-					ret = new MessageInfo(msg, sock_client);
+					ret = NetworkMessage.readMessage(sock_client);
 				}
 
 				keyIterator.remove();
@@ -162,16 +156,17 @@ public class Server implements NetworkNode {
 		ssocketChannel.close();
 	}
 
+	@Override
+	public void sendMessage(String msg) throws Exception {
+		NetworkMessage.sendMessage(msg, sclients);
+	}
+
 	public void sendMessageTo(String msg, Socket sock) throws Exception {
 		NetworkMessage.sendMessage(msg, sock);
 	}
 
 	public void sendMessageTo(String msg, SocketChannel sock) throws Exception {
 		NetworkMessage.sendMessage(msg, sock);
-	}
-
-	public void sendMessage(String msg) throws Exception {
-		NetworkMessage.sendMessage(msg, sclients);
 	}
 
 	public void sendMessageFrom(String msg, SocketChannel sock) throws Exception {

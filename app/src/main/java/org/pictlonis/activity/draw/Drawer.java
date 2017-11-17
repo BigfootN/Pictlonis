@@ -6,20 +6,32 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.PointF;
 import android.view.MotionEvent;
 import android.view.View;
+
+import org.pictlonis.data.GameInformation;
+import org.pictlonis.net.message.NetworkMessage;
+import org.pictlonis.net.message.PictlonisMessage;
 
 /**
  * Created by bigfoot on 13/10/17.
  */
 
 public class Drawer extends View {
-	Context context;
+	private Context context;
 	private Bitmap bitmap;
 	private Canvas canvas;
 	private Paint  bitmapPainter;
 	private Paint painter;
 	private PathManager mPathManager;
+	private GameInformation gameInfoInstance;
+
+	public enum PosType {
+		START,
+		MOVE,
+		UP
+	};
 
 	private void initPainter() {
 		painter = new Paint();
@@ -32,20 +44,25 @@ public class Drawer extends View {
 		painter.setStrokeWidth(5);
 	}
 
-	private void touch_start(float x, float y) {
-		mPathManager.newPath(x, y);
-	}
+	private void sendCurPos(float x, float y, PosType type) {
+		String msg;
+		PointF point;
 
-	private void touch_move(float x, float y) {
-		mPathManager.addPoint(x, y);
-	}
+		point = new PointF(x, y);
+		msg = null;
 
-	private void touch_up() {
-		Path path;
+		if (type == PosType.MOVE)
+			msg = PictlonisMessage.curPoint(point);
+		else if (type == PosType.START)
+			msg = PictlonisMessage.startPoint(point);
+		else if (type == PosType.UP)
+			msg = PictlonisMessage.lastPoint(point);
 
-		path = mPathManager.getCurrentPath();
-		canvas.drawPath(path, painter);
-		path.reset();
+		try {
+			gameInfoInstance.getNode().sendMessage(msg);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public Drawer(Context c) {
@@ -54,27 +71,35 @@ public class Drawer extends View {
 		bitmapPainter = new Paint(Paint.DITHER_FLAG);
 		mPathManager = new PathManager();
 		initPainter();
+		gameInfoInstance = GameInformation.getInstance();
 	}
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		float x = event.getX();
-		float y = event.getY();
+		float x;
+		float y;
+		boolean isPlayer;
 
-		switch (event.getAction()) {
-			case MotionEvent.ACTION_DOWN:
-				touch_start(x, y);
-				invalidate();
-				break;
-			case MotionEvent.ACTION_MOVE:
-				touch_move(x, y);
-				invalidate();
-				break;
-			case MotionEvent.ACTION_UP:
-				touch_up();
-				invalidate();
-				break;
+		isPlayer = gameInfoInstance.isPlayer();
+		if (isPlayer) {
+			x = event.getX();
+			y = event.getY();
+			switch (event.getAction()) {
+				case MotionEvent.ACTION_DOWN:
+					touch_start(x, y);
+					sendCurPos(x, y, PosType.START);
+					break;
+				case MotionEvent.ACTION_MOVE:
+					touch_move(x, y);
+					sendCurPos(x, y, PosType.MOVE);
+					break;
+				case MotionEvent.ACTION_UP:
+					touch_up();
+					sendCurPos(x, y, PosType.UP);
+					break;
+			}
 		}
+
 		return true;
 	}
 
@@ -96,7 +121,22 @@ public class Drawer extends View {
 		canvas.drawPath(path, painter);
 	}
 
-	public PathManager getPathManager() {
-		return mPathManager;
+	public void touch_start(float x, float y) {
+		mPathManager.newPath(x, y);
+		invalidate();
+	}
+
+	public void touch_move(float x, float y) {
+		mPathManager.addPoint(x, y);
+		invalidate();
+	}
+
+	public void touch_up() {
+		Path path;
+
+		path = mPathManager.getCurrentPath();
+		canvas.drawPath(path, painter);
+		path.reset();
+		invalidate();
 	}
 }

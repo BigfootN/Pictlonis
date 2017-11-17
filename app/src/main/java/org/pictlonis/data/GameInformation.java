@@ -2,6 +2,7 @@ package org.pictlonis.data;
 
 import android.content.Context;
 
+import org.pictlonis.activity.draw.Drawer;
 import org.pictlonis.net.NetworkNode;
 import org.pictlonis.net.client.Client;
 import org.pictlonis.net.host.Server;
@@ -19,6 +20,8 @@ public class GameInformation {
 	private int nbConnected;
 	private Context ctx;
 	private File USERS_FILE;
+	private boolean isPlayer;
+	private Drawer drawer;
 
 	public enum NodeType {
 		SERVER,
@@ -94,5 +97,21 @@ public class GameInformation {
 
 	public User getUser() {
 		return mUser;
+	}
+
+	public void setIsPlayer(boolean isPlayer) {
+		this.isPlayer = isPlayer;
+	}
+
+	public boolean isPlayer() {
+		return isPlayer;
+	}
+
+	public void setDrawer(Drawer drawer) {
+		this.drawer = drawer;
+	}
+
+	public Drawer getDrawer() {
+		return drawer;
 	}
 }
