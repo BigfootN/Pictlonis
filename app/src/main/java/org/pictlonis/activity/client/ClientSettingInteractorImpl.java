@@ -9,12 +9,14 @@ import org.pictlonis.net.client.Client;
 
 public class ClientSettingInteractorImpl implements ClientSettingInteractor{
 	@Override
-	public void connect(String ip, int port) throws Exception {
-		Client client;
+	public Client connect(String ip, int port) throws Exception {
+		Client ret;
 
-		client = new Client();
-		client.connectTo(ip, port);
+		ret = new Client();
+		ret.connectTo(ip, port);
 
-		GameInformation.getInstance().setNode(GameInformation.NodeType.CLIENT, client);
+		GameInformation.getInstance().setNode(GameInformation.NodeType.CLIENT, ret);
+
+		return ret;
 	}
 }

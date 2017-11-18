@@ -1,5 +1,8 @@
 package org.pictlonis.activity.wait;
 
+import org.pictlonis.data.GameInformation;
+import org.pictlonis.net.NodeType;
+
 /**
  * Created by bigfoot on 05/11/17.
  */
@@ -22,8 +25,8 @@ public class WaitPresenterImpl implements WaitPresenter {
 	public WaitPresenterImpl(WaitView view) {
 		interactor = new WaitInteractorImpl();
 		this.view = view;
+		interactor.launchNode();
 		nbPlayers = interactor.getNbPlayers();
-		interactor.waitPlayers();
 	}
 
 	@Override

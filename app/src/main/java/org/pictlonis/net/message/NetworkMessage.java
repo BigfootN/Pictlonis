@@ -1,10 +1,17 @@
 package org.pictlonis.net.message;
 
+import android.os.AsyncTask;
+import android.os.NetworkOnMainThreadException;
+
+import org.pictlonis.net.operations.AsyncTaskResult;
+import org.pictlonis.net.operations.SocketOperation;
+
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.net.SocketOption;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.channels.SocketChannel;
@@ -16,8 +23,14 @@ import java.util.Iterator;
  */
 
 public class NetworkMessage {
+
 	private static boolean isLastMessage(String str) {
 		return str.endsWith(System.lineSeparator());
+	}
+
+	private enum OperationType {
+		WRITE,
+		READ
 	}
 
 	private static String rmEndMsg(String msg) {
@@ -32,22 +45,11 @@ public class NetworkMessage {
 		return ret;
 	}
 
-	public static void sendMessage(String message, Socket socket) throws Exception {
-		OutputStream os;
-		OutputStreamWriter osw;
-		BufferedWriter bw;
-
-		os = socket.getOutputStream();
-		osw = new OutputStreamWriter(os);
-		bw = new BufferedWriter(osw);
-
-		bw.write(message);
-		bw.flush();
-	}
-
-	public static void sendMessage(String message, SocketChannel socket) throws Exception {
+	public static void sendMessage(String message, SocketChannel socket) throws Exception{
 		ByteBuffer buffer;
 		String msgToSend;
+		SocketOperation write;
+		AsyncTaskResult<ByteBuffer> result;
 
 		msgToSend = message + System.lineSeparator();
 		buffer = ByteBuffer.allocate(msgToSend.getBytes().length);
@@ -55,12 +57,15 @@ public class NetworkMessage {
 		buffer.put(msgToSend.getBytes());
 		buffer.flip();
 
-		while (buffer.hasRemaining()) {
-			socket.write(buffer);
-		}
+		write = new SocketOperation(SocketOperation.OperationType.WRITE, buffer, socket);
+		write.execute();
+
+		result = write.get();
+		if(result.getException() != null)
+			throw result.getException();
 	}
 
-	public static void sendMessage(String message, ArrayList<SocketChannel> sockets) throws Exception{
+	public static void sendMessage(String message, ArrayList<SocketChannel> sockets) throws Exception {
 		Iterator<SocketChannel> sock;
 
 		sock = sockets.iterator();
@@ -69,18 +74,23 @@ public class NetworkMessage {
 		}
 	}
 
-	public static String readMessage(SocketChannel socket) {
+	public static String readMessage(SocketChannel socket) throws Exception {
 		String ret;
 		ByteBuffer buffer;
+		SocketOperation read;
+		AsyncTaskResult<ByteBuffer> result;
 
 		ret = "";
+
 		do {
 			buffer = ByteBuffer.allocate(1);
-			try {
-				socket.read(buffer);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			read = new SocketOperation(SocketOperation.OperationType.READ, buffer, socket);
+
+			read.execute();
+			result = read.get();
+
+			if (result.getException() != null)
+				throw result.getException();
 
 			ret += new String(buffer.array());
 		} while (!isLastMessage(ret));

@@ -43,7 +43,7 @@ public class ClientSettingPresenterImpl implements ClientSettingPresenter {
 			view.onFailure("Port incorrecte !");
 		else {
 			try {
-				interactor.connect(ip, portParsed);
+				interactor.connect(ip, portParsed).launch();
 				view.onSuccess();
 			} catch (Exception e) {
 				view.onFailure(e.getMessage());

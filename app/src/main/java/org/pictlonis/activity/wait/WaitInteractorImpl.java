@@ -14,16 +14,6 @@ public class WaitInteractorImpl extends Thread implements WaitInteractor {
 	int maxPlayer;
 	int nbConn;
 
-	private boolean nodeIsServer() {
-		boolean ret;
-
-		ret = false;
-		if (node.getNodeType() == NodeType.SERVER)
-			ret = true;
-
-		return ret;
-	}
-
 	public WaitInteractorImpl() {
 		node = GameInformation.getInstance().getNode();
 		maxPlayer = GameInformation.getInstance().getNbPlayers();
@@ -33,17 +23,15 @@ public class WaitInteractorImpl extends Thread implements WaitInteractor {
 	@Override
 	public void run() {
 		try {
-			((Server) node).waitForClients();
+			node.launch();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	@Override
-	public void waitPlayers() {
-		if (nodeIsServer()) {
-			start();
-		}
+	public void launchNode() {
+		start();
 	}
 
 	@Override

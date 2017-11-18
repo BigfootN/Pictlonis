@@ -9,4 +9,5 @@ public interface NetworkNode {
 	NodeType getNodeType();
 	void close() throws Exception;
 	void sendMessage(String msg) throws Exception;
+	void launch() throws Exception;
 }

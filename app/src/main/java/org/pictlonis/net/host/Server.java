@@ -10,12 +10,15 @@ import org.pictlonis.net.message.PictlonisMessage;
 
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.nio.channels.SelectableChannel;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -30,6 +33,7 @@ public class Server implements NetworkNode {
 	private InetSocketAddress addr;
 	private ArrayList<SocketChannel> sclients;
 	private MessageThread msgThread;
+	private boolean isLaunched;
 
 	private void sendMaxPlayers(SocketChannel socket) throws Exception {
 		sendMessageTo(PictlonisMessage.maxPlayer(nbClients), socket);
@@ -49,17 +53,7 @@ public class Server implements NetworkNode {
 		ssocketChannel.register(selector, ssocketChannel.validOps());
 	}
 
-	public Server(int port, int nbClients) throws Exception {
-		this.nbClients = nbClients;
-		this.port = port;
-		initServer();
-		sclients = new ArrayList<SocketChannel>();
-
-		msgThread = new MessageThread(this);
-		msgThread.readMessages();
-	}
-
-	public void waitForClients() throws Exception {
+	private void waitForClients() throws Exception {
 		int nb_conn;
 		SocketChannel schannel;
 		Set<SelectionKey> keys;
@@ -68,69 +62,105 @@ public class Server implements NetworkNode {
 
 
 		nb_conn = 0;
-
 		while (nb_conn < nbClients) {
 			selector.select();
-			keys = selector.selectedKeys();
-			it = keys.iterator();
+			keys = Collections.synchronizedSet(selector.selectedKeys());
 
-			while (nb_conn < nbClients && it.hasNext()) {
-				key = it.next();
+			synchronized (keys) {
+				it = keys.iterator();
+			}
 
-				if (!key.isValid()) {
-					it.remove();
-					continue;
-				}
+			synchronized (keys) {
+				while (nb_conn < nbClients && it.hasNext()) {
+					synchronized (keys) {
+						key = it.next();
+					}
 
-				if (key.isAcceptable()) {
-					schannel = ssocketChannel.accept();
-					schannel.configureBlocking(false);
+					if (!key.isValid()) {
+						it.remove();
+						continue;
+					}
 
-					selector.wakeup();
-					schannel.register(selector, SelectionKey.OP_READ);
+					if (key.isAcceptable()) {
+						schannel = ssocketChannel.accept();
+						schannel.configureBlocking(false);
 
-					sclients.add(schannel);
-					sendMaxPlayers(schannel);
-					sendNbConn();
-					nb_conn++;
-					GameInformation.getInstance().setNbConnected(nb_conn);
+						selector.wakeup();
+						schannel.register(selector, SelectionKey.OP_READ);
+
+						sclients.add(schannel);
+						sendMaxPlayers(schannel);
+						sendNbConn();
+						nb_conn++;
+						GameInformation.getInstance().setNbConnected(nb_conn);
+					}
+
+					synchronized (keys) {
+						it.remove();
+					}
 				}
 
 				synchronized (this) {
-					it.remove();
+					this.wait(500);
 				}
 			}
 
-			synchronized (this) {
-				this.wait(500);
-			}
 		}
 
+	}
 
+	public Server(int port, int nbClients) throws Exception {
+		this.nbClients = nbClients;
+		this.port = port;
+		initServer();
+		sclients = new ArrayList<SocketChannel>();
+		isLaunched = false;
+
+		msgThread = new MessageThread(this);
+	}
+
+	public void launch() throws Exception {
+		if (!isLaunched) {
+			waitForClients();
+			msgThread.readMessages();
+			isLaunched = true;
+		}
 	}
 
 	@Override
 	public String getMessage() throws Exception {
 		String ret;
+		Set<SelectionKey> selectionKeys;
+		Iterator<SelectionKey> keyIterator;
+		SelectionKey key;
 
 		ret = null;
 		while (ret == null) {
 			selector.select();
+			selectionKeys = Collections.synchronizedSet(selector.selectedKeys());
 
-			Set<SelectionKey> selectionKeys = selector.selectedKeys();
-			Iterator<SelectionKey> keyIterator = selectionKeys.iterator();
+			synchronized (selectionKeys) {
+				keyIterator = selectionKeys.iterator();
+			}
 
-			while (ret == null && keyIterator.hasNext()) {
-				SelectionKey key = keyIterator.next();
+			synchronized (selectionKeys) {
+				while (ret == null && keyIterator.hasNext()) {
 
-				if (key.isReadable()) {
-					SocketChannel sock_client;
+					synchronized (selectionKeys) {
+						key = keyIterator.next();
+					}
 
-					sock_client = (SocketChannel) key.channel();
-					ret = NetworkMessage.readMessage(sock_client);
+					if (key.isReadable()) {
+						SocketChannel sock_client;
+
+						sock_client = (SocketChannel) key.channel();
+						ret = NetworkMessage.readMessage(sock_client);
+					}
+
+					synchronized (selectionKeys) {
+						keyIterator.remove();
+					}
 				}
-
-				keyIterator.remove();
 			}
 		}
 
@@ -159,10 +189,6 @@ public class Server implements NetworkNode {
 	@Override
 	public void sendMessage(String msg) throws Exception {
 		NetworkMessage.sendMessage(msg, sclients);
-	}
-
-	public void sendMessageTo(String msg, Socket sock) throws Exception {
-		NetworkMessage.sendMessage(msg, sock);
 	}
 
 	public void sendMessageTo(String msg, SocketChannel sock) throws Exception {

@@ -1,5 +1,7 @@
 package org.pictlonis.net.client;
 
+import android.os.NetworkOnMainThreadException;
+
 import org.pictlonis.data.GameInformation;
 import org.pictlonis.net.message.MessageInfo;
 import org.pictlonis.net.message.MessageThread;
@@ -19,11 +21,13 @@ public class Client implements NetworkNode {
 	private SocketChannel socket;
 	private InetSocketAddress addr;
 	private MessageThread msgThread;
-	NetworkConnect netConn;
+	private NetworkConnect netConn;
+	private boolean isLaunched;
 
 	public Client() {
 		netConn = new NetworkConnect();
 		GameInformation.getInstance().setNode(GameInformation.NodeType.CLIENT, this);
+		isLaunched = false;
 	}
 
 	public void connectTo(String ip, int port) throws Exception {
@@ -31,8 +35,7 @@ public class Client implements NetworkNode {
 		netConn.execute(addr);
 		socket = netConn.get();
 
-		msgThread = new MessageThread(this);
-		msgThread.readMessages();
+		NetworkMessage.sendMessage("hello", socket);
 	}
 
 	@Override
@@ -44,6 +47,7 @@ public class Client implements NetworkNode {
 		return ret;
 	}
 
+	@Override
 	public void sendMessage(String msg) throws Exception {
 		NetworkMessage.sendMessage(msg, socket);
 	}
@@ -56,5 +60,14 @@ public class Client implements NetworkNode {
 	@Override
 	public void close() throws Exception {
 		socket.close();
+	}
+
+	@Override
+	public void launch() {
+		if (!isLaunched) {
+			msgThread = new MessageThread(this);
+			msgThread.readMessages();
+			isLaunched = true;
+		}
 	}
 }
