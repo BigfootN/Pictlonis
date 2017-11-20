@@ -1,5 +1,7 @@
 package org.pictlonis.net.message;
 
+import android.app.Activity;
+
 import org.pictlonis.net.NetworkNode;
 
 /**

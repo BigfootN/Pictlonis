@@ -50,6 +50,7 @@ public class NetworkMessage {
 		String msgToSend;
 		SocketOperation write;
 		AsyncTaskResult<ByteBuffer> result;
+		Thread writeThread;
 
 		msgToSend = message + System.lineSeparator();
 		buffer = ByteBuffer.allocate(msgToSend.getBytes().length);
@@ -58,11 +59,15 @@ public class NetworkMessage {
 		buffer.flip();
 
 		write = new SocketOperation(SocketOperation.OperationType.WRITE, buffer, socket);
-		write.execute();
+		//write.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, null);
+		writeThread = new Thread(write);
+		writeThread.start();
 
-		result = write.get();
-		if(result.getException() != null)
-			throw result.getException();
+		write.getResult();
+
+		//result = write.get();
+		/*if(result.getException() != null)
+			throw result.getException();*/
 	}
 
 	public static void sendMessage(String message, ArrayList<SocketChannel> sockets) throws Exception {
@@ -79,18 +84,20 @@ public class NetworkMessage {
 		ByteBuffer buffer;
 		SocketOperation read;
 		AsyncTaskResult<ByteBuffer> result;
+		Thread readThread;
 
 		ret = "";
 
 		do {
 			buffer = ByteBuffer.allocate(1);
 			read = new SocketOperation(SocketOperation.OperationType.READ, buffer, socket);
+			readThread = new Thread(read);
+			readThread.start();
 
-			read.execute();
-			result = read.get();
+			read.getResult();
 
-			if (result.getException() != null)
-				throw result.getException();
+			/*if (result.getException() != null)
+				throw result.getException();*/
 
 			ret += new String(buffer.array());
 		} while (!isLastMessage(ret));

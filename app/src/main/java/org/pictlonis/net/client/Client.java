@@ -28,14 +28,13 @@ public class Client implements NetworkNode {
 		netConn = new NetworkConnect();
 		GameInformation.getInstance().setNode(GameInformation.NodeType.CLIENT, this);
 		isLaunched = false;
+		GameInformation.getInstance().setIsPlayer(true);
 	}
 
 	public void connectTo(String ip, int port) throws Exception {
 		this.addr = new InetSocketAddress(ip, port);
 		netConn.execute(addr);
 		socket = netConn.get();
-
-		NetworkMessage.sendMessage("hello", socket);
 	}
 
 	@Override

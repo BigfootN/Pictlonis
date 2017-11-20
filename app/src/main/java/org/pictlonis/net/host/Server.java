@@ -85,8 +85,10 @@ public class Server implements NetworkNode {
 						schannel = ssocketChannel.accept();
 						schannel.configureBlocking(false);
 
+						System.out.println("Client trouve");
 						selector.wakeup();
 						schannel.register(selector, SelectionKey.OP_READ);
+						System.out.println("Client enregistre");
 
 						sclients.add(schannel);
 						sendMaxPlayers(schannel);

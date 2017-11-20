@@ -22,30 +22,70 @@ public class WaitActivity extends Activity implements WaitView {
 	private WaitPresenter presenter;
 	Handler handler;
 
+	private class WaitTask implements Runnable {
+		private Thread t;
+
+		private void goToDrawActivity() {
+			onAllConnected();
+		}
+
+		private void postExecute() {
+			goToDrawActivity();
+		}
+
+		@Override
+		public void run() {
+			while (!presenter.allPlayersConnected()) {
+				try {
+					Thread.sleep(500);
+					handler.post(new Runnable() {
+
+						@Override
+						public void run() {
+							presenter.informNbPlayer();
+						}
+					});
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+				try {
+					Thread.sleep(50);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+
+			postExecute();
+		}
+
+		public void join() {
+			try {
+				t.join();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+
+		public boolean isRunning() {
+			return t.isAlive();
+		}
+
+		public void start() {
+			if (t == null) {
+				t = new Thread(this);
+				t.start();
+			}
+		}
+	}
+
 	private void initPresenter() {
 		handler = new Handler();
 		presenter = new WaitPresenterImpl(this);
+		WaitTask task;
 
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				while (!presenter.allPlayersConnected()) {
-					try {
-						Thread.sleep(500);
-						handler.post(new Runnable() {
-
-							@Override
-							public void run() {
-								presenter.informNbPlayer();
-
-							}
-						});
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-			}
-		}).start();
+		task = new WaitTask();
+		task.start();
 	}
 
 	private void initLayout() {
