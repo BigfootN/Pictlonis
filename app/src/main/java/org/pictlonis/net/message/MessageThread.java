@@ -8,7 +8,7 @@ import org.pictlonis.net.NetworkNode;
  * Created by bigfoot on 05/11/17.
  */
 
-public class MessageThread extends Thread {
+public class MessageThread extends Thread implements Runnable {
 	private NetworkNode node;
 	private MessageAction msgAction;
 

@@ -2,6 +2,7 @@ package org.pictlonis.activity.draw;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.PointF;
 import android.os.Bundle;
 import android.text.Layout;
 import android.view.KeyEvent;
@@ -21,8 +22,12 @@ import org.pictlonis.chat.ChatView;
 import org.pictlonis.chat.ChatViewInteractor;
 import org.pictlonis.chat.ChatViewInteractorImpl;
 import org.pictlonis.data.GameInformation;
+import org.pictlonis.net.message.MessageThread;
+import org.pictlonis.net.operations.SocketOperation;
+import org.pictlonis.utils.draw.DrawOperation;
+import org.pictlonis.utils.draw.DrawOperations;
 
-public class DrawActivity extends Activity implements TextView.OnEditorActionListener, DrawingView, ChatView{
+public class DrawActivity extends Activity implements TextView.OnEditorActionListener, DrawingView, ChatView {
 	private Drawer dv;
 	private RelativeLayout layout;
 	private EditText txtv;

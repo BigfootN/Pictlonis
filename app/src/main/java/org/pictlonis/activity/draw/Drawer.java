@@ -1,5 +1,6 @@
 package org.pictlonis.activity.draw;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -13,13 +14,17 @@ import android.view.View;
 import org.pictlonis.data.GameInformation;
 import org.pictlonis.net.message.NetworkMessage;
 import org.pictlonis.net.message.PictlonisMessage;
+import org.pictlonis.utils.draw.DrawOperation;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by bigfoot on 13/10/17.
  */
 
 public class Drawer extends View {
-	private Context context;
+	private Activity context;
 	private Bitmap bitmap;
 	private Canvas canvas;
 	private Paint  bitmapPainter;
@@ -27,11 +32,31 @@ public class Drawer extends View {
 	private PathManager mPathManager;
 	private GameInformation gameInfoInstance;
 
+
 	public enum PosType {
 		START,
 		MOVE,
-		UP
+		UP;
 	};
+
+	private void touch_start(float x, float y) {
+		mPathManager.newPath(x, y);
+		invalidate();
+	}
+
+	private void touch_move(float x, float y) {
+		mPathManager.addPoint(x, y);
+		invalidate();
+	}
+
+	private void touch_up() {
+		Path path;
+
+		path = mPathManager.getCurrentPath();
+		canvas.drawPath(path, painter);
+		path.reset();
+		invalidate();
+	}
 
 	private void initPainter() {
 		painter = new Paint();
@@ -65,9 +90,9 @@ public class Drawer extends View {
 		}
 	}
 
-	public Drawer(Context c) {
-		super(c);
-		context = c;
+	public Drawer(Activity activity) {
+		super(activity.getBaseContext());
+		context = activity;
 		bitmapPainter = new Paint(Paint.DITHER_FLAG);
 		mPathManager = new PathManager();
 		initPainter();
@@ -121,22 +146,28 @@ public class Drawer extends View {
 		canvas.drawPath(path, painter);
 	}
 
-	public void touch_start(float x, float y) {
-		mPathManager.newPath(x, y);
-		invalidate();
-	}
+	public void draw(DrawOperation drawOp) {
+		final DrawOperation drawOpParam = drawOp;
 
-	public void touch_move(float x, float y) {
-		mPathManager.addPoint(x, y);
-		invalidate();
-	}
+		context.runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				PointF point;
 
-	public void touch_up() {
-		Path path;
+				point = drawOpParam.getPoint();
 
-		path = mPathManager.getCurrentPath();
-		canvas.drawPath(path, painter);
-		path.reset();
-		invalidate();
+				switch (drawOpParam.getType()) {
+					case UP:
+						touch_up();
+						break;
+					case NEW:
+						touch_start(point.x, point.y);
+						break;
+					case MOVE:
+						touch_move(point.x, point.y);
+						break;
+				}
+			}
+		});
 	}
 }
