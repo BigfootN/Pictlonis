@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
+import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -18,13 +19,15 @@ import org.pictlonis.utils.draw.DrawOperation;
 
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.jar.Attributes;
 
 /**
  * Created by bigfoot on 13/10/17.
  */
 
 public class Drawer extends View {
-	private Activity context;
+	private Context context;
+	private Activity activity;
 	private Bitmap bitmap;
 	private Canvas canvas;
 	private Paint  bitmapPainter;
@@ -92,11 +95,24 @@ public class Drawer extends View {
 
 	public Drawer(Activity activity) {
 		super(activity.getBaseContext());
-		context = activity;
+		this.activity = activity;
 		bitmapPainter = new Paint(Paint.DITHER_FLAG);
 		mPathManager = new PathManager();
 		initPainter();
 		gameInfoInstance = GameInformation.getInstance();
+	}
+
+	public Drawer(Context ctx, AttributeSet attrs) {
+		super(ctx, attrs);
+		context = ctx;
+		bitmapPainter = new Paint(Paint.DITHER_FLAG);
+		mPathManager = new PathManager();
+		initPainter();
+		gameInfoInstance = GameInformation.getInstance();
+	}
+
+	public void setActivity(Activity activity) {
+		this.activity = activity;
 	}
 
 	@Override
@@ -149,7 +165,7 @@ public class Drawer extends View {
 	public void draw(DrawOperation drawOp) {
 		final DrawOperation drawOpParam = drawOp;
 
-		context.runOnUiThread(new Runnable() {
+		activity.runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
 				PointF point;

@@ -22,11 +22,21 @@ public class WaitPresenterImpl implements WaitPresenter {
 		return ret;
 	}
 
+	private void getNbPlayers() {
+		while (nbPlayers == 0) {
+			nbPlayers = interactor.getNbPlayers();
+			try {
+				Thread.sleep(50);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 	public WaitPresenterImpl(WaitView view) {
 		interactor = new WaitInteractorImpl();
-		this.view = view;
-		interactor.launchNode();
 		nbPlayers = interactor.getNbPlayers();
+		this.view = view;
 	}
 
 	@Override

@@ -29,117 +29,24 @@ import org.pictlonis.utils.draw.DrawOperations;
 
 public class DrawActivity extends Activity implements TextView.OnEditorActionListener, DrawingView, ChatView {
 	private Drawer dv;
-	private RelativeLayout layout;
 	private EditText txtv;
-	private int drawHeightPerc;
-	private int drawWidthPerc;
-	private int scrollHeightPerc;
-	private int scrollWidthPerc;
 	private DrawPresenter presenter;
 	private ScrollView scrollView;
 	private ChatViewInteractor chatPresenter;
 
-	private void setDrawingViewDim(int heightPerc, int widthPerc) {
-		drawHeightPerc = heightPerc;
-		drawWidthPerc = widthPerc;
-	}
-
-	private void setScrollViewDim(int heightPerc, int widthPerc) {
-		scrollHeightPerc = heightPerc;
-		scrollWidthPerc = widthPerc;
-	}
-
-	private void addViewBottom(View view) {
-		RelativeLayout rl;
-		RelativeLayout.LayoutParams rlParams;
-
-		rl = layout;
-		rlParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-		rlParams.addRule(RelativeLayout.ALIGN_BOTTOM, 1);
-
-		rl.addView(view, rlParams);
-	}
-
-	private void addViewBottomWeight(View view, int weight) {
-		RelativeLayout rl;
-		RelativeLayout.LayoutParams rlParams;
-		ViewGroup.LayoutParams viewParams;
-		int height;
-		int width;
-
-		viewParams = view.getLayoutParams();
-		height = viewParams.height;
-		width = viewParams.width;
-
-		rl = layout;
-		rlParams = new RelativeLayout.LayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, weight));
-		rlParams.addRule(RelativeLayout.ALIGN_BOTTOM, 1);
-
-		rl.addView(view, rlParams);
-	}
-
-	private void initScreenDim() {
-		final View view = findViewById(R.id.drawing_layout);
-		ViewTreeObserver viewTreeObserver;
-
-		viewTreeObserver = view.getViewTreeObserver();
-		if (viewTreeObserver.isAlive()) {
-			viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-
-				@Override
-				public void onGlobalLayout() {
-					LayoutInflater inflater;
-					ViewGroup parent;
-					View tmp;
-					RelativeLayout rl;
-					RelativeLayout.LayoutParams rlParams;
-
-					rl = (RelativeLayout) layout;
-					rlParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-
-					inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-					tmp = inflater.inflate(R.layout.drawing_layout, null);
-					parent = (ViewGroup) findViewById(R.id.drawing_layout);
-
-					view.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-
-					int screenHeight = view.getHeight();
-					int screenWidth = view.getWidth();
-
-					int dvHeight = (screenHeight * drawHeightPerc) / 100;
-					int dvWidth = (screenWidth * drawWidthPerc) / 100;
-
-					int svHeight = (screenHeight * scrollHeightPerc) / 100;
-					int svWidth = (screenHeight * scrollWidthPerc) / 100;
-
-					int txtvHeight = screenHeight - dvHeight - svHeight;
-					int txtvWidth = screenWidth;
-
-					dv.setLayoutParams(new LinearLayout.LayoutParams(dvWidth, dvHeight));
-					scrollView.setLayoutParams(new LinearLayout.LayoutParams(svWidth, ViewGroup.LayoutParams.WRAP_CONTENT));
-					txtv.setLayoutParams(new LinearLayout.LayoutParams(txtvWidth, ViewGroup.LayoutParams.WRAP_CONTENT));
-
-					addViewBottom(txtv);
-					addViewBottom(scrollView);
-					addViewBottomWeight(dv, 1);
-				}
-			});
-		}
-	}
-
 	private void initViews() {
-		dv = new Drawer(this);
+		dv = findViewById(R.id.drawer);
+		dv.setActivity(this);
 		GameInformation.getInstance().setDrawer(dv);
 
-		txtv = new EditText(this);
+		txtv = findViewById(R.id.textChat);
 		txtv.setOnEditorActionListener(this);
 
-		scrollView = new ScrollView(this);
+		scrollView = findViewById(R.id.chatScroll);
 	}
 
 	private void initLayout() {
 		setContentView(R.layout.drawing_layout);
-		layout = (RelativeLayout) findViewById(R.id.drawing_layout);
 	}
 
 	@Override
@@ -147,9 +54,6 @@ public class DrawActivity extends Activity implements TextView.OnEditorActionLis
 		super.onCreate(savedInstanceState);
 		initLayout();
 		initViews();
-		setDrawingViewDim(50, 100);
-		setScrollViewDim(30, 100);
-		initScreenDim();
 
 		presenter = new DrawPresenterImpl(this);
 		chatPresenter = new ChatViewInteractorImpl(this);

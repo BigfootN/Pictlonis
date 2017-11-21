@@ -5,7 +5,6 @@ package org.pictlonis.activity.wait;
  */
 
 public interface WaitInteractor {
-	void launchNode();
 	int getNbConn();
 	int getNbPlayers();
 	boolean everybodyConnected();

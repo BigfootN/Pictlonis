@@ -16,7 +16,8 @@ public class WaitInteractorImpl extends Thread implements WaitInteractor {
 
 	public WaitInteractorImpl() {
 		node = GameInformation.getInstance().getNode();
-		maxPlayer = GameInformation.getInstance().getNbPlayers();
+		start();
+		getNbPlayers();
 		nbConn = 0;
 	}
 
@@ -30,24 +31,21 @@ public class WaitInteractorImpl extends Thread implements WaitInteractor {
 	}
 
 	@Override
-	public void launchNode() {
-		start();
-	}
-
-	@Override
 	public int getNbConn() {
-		return GameInformation.getInstance().getNbConnected();
+		nbConn = GameInformation.getInstance().getNbConnected();
+		return nbConn;
 	}
 
 	@Override
 	public int getNbPlayers() {
-		return GameInformation.getInstance().getNbPlayers();
+		while (maxPlayer == 0)
+			maxPlayer = GameInformation.getInstance().getNbPlayers();
+
+		return maxPlayer;
 	}
 
 	@Override
 	public boolean everybodyConnected() {
-		nbConn = GameInformation.getInstance().getNbConnected();
-
 		return nbConn == maxPlayer;
 	}
 }

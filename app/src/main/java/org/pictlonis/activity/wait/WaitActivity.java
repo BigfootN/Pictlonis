@@ -35,9 +35,9 @@ public class WaitActivity extends Activity implements WaitView {
 
 		@Override
 		public void run() {
-			while (!presenter.allPlayersConnected()) {
+			do {
 				try {
-					Thread.sleep(500);
+					Thread.sleep(50);
 					handler.post(new Runnable() {
 
 						@Override
@@ -54,7 +54,7 @@ public class WaitActivity extends Activity implements WaitView {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-			}
+			} while (!presenter.allPlayersConnected());
 
 			postExecute();
 		}

@@ -1,8 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawing_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/drawing_layout">
+    android:layout_alignParentBottom="true"
+    android:orientation="vertical">
 
-</RelativeLayout>
+    <org.pictlonis.activity.draw.Drawer
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:id="@+id/drawer"/>
+
+    <ScrollView
+        android:id="@+id/chatScroll"
+        android:layout_width="match_parent"
+        android:layout_height="100dp">
+    </ScrollView>
+
+    <EditText
+        android:id="@+id/textChat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="0dp"
+        android:layout_marginEnd="51dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Name" />
+</LinearLayout>
