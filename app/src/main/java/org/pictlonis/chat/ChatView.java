@@ -7,5 +7,5 @@ import android.widget.ScrollView;
  */
 
 public interface ChatView {
-	ScrollView getScrollView();
+	void addMessage(String msg);
 }

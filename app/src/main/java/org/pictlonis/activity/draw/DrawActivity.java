@@ -21,28 +21,33 @@ import org.pictlonis.R;
 import org.pictlonis.chat.ChatView;
 import org.pictlonis.chat.ChatViewInteractor;
 import org.pictlonis.chat.ChatViewInteractorImpl;
+import org.pictlonis.chat.ChatViewPresenter;
+import org.pictlonis.chat.ChatViewPresenterImpl;
 import org.pictlonis.data.GameInformation;
 import org.pictlonis.net.message.MessageThread;
 import org.pictlonis.net.operations.SocketOperation;
 import org.pictlonis.utils.draw.DrawOperation;
 import org.pictlonis.utils.draw.DrawOperations;
 
+import static android.view.inputmethod.EditorInfo.IME_NULL;
+
 public class DrawActivity extends Activity implements TextView.OnEditorActionListener, DrawingView, ChatView {
 	private Drawer dv;
-	private EditText txtv;
+	private EditText txtChat;
 	private DrawPresenter presenter;
-	private ScrollView scrollView;
-	private ChatViewInteractor chatPresenter;
+	private LinearLayout scrollLayout;
+	private ChatViewPresenter chatPresenter;
 
 	private void initViews() {
 		dv = findViewById(R.id.drawer);
 		dv.setActivity(this);
 		GameInformation.getInstance().setDrawer(dv);
 
-		txtv = findViewById(R.id.textChat);
-		txtv.setOnEditorActionListener(this);
+		txtChat = findViewById(R.id.textChat);
+		txtChat.setOnEditorActionListener(this);
+		GameInformation.getInstance().setChat(this);
 
-		scrollView = findViewById(R.id.chatScroll);
+		scrollLayout = findViewById(R.id.scrollLayout);
 	}
 
 	private void initLayout() {
@@ -56,15 +61,13 @@ public class DrawActivity extends Activity implements TextView.OnEditorActionLis
 		initViews();
 
 		presenter = new DrawPresenterImpl(this);
-		chatPresenter = new ChatViewInteractorImpl(this);
+		chatPresenter = new ChatViewPresenterImpl(getApplicationContext(), this);
 	}
 
 	@Override
 	public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-		if (actionId == EditorInfo.IME_ACTION_SEND
-				|| event.getKeyCode() == KeyEvent.KEYCODE_ENTER
-				&& event.getAction() == KeyEvent.ACTION_DOWN)
-			presenter.validateMessage(v.getText().toString());
+		if (actionId == EditorInfo.IME_ACTION_DONE)
+			chatPresenter.validateMessage(txtChat.getText().toString());
 		return true;
 	}
 
@@ -74,7 +77,17 @@ public class DrawActivity extends Activity implements TextView.OnEditorActionLis
 	}
 
 	@Override
-	public ScrollView getScrollView() {
-		return scrollView;
+	public void addMessage(String msg) {
+		final TextView view;
+
+		view = new TextView(this.getApplicationContext());
+		view.setText(msg);
+
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				scrollLayout.addView(view);
+			}
+		});
 	}
 }

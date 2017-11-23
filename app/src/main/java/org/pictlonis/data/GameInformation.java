@@ -3,6 +3,7 @@ package org.pictlonis.data;
 import android.content.Context;
 
 import org.pictlonis.activity.draw.Drawer;
+import org.pictlonis.chat.ChatView;
 import org.pictlonis.net.NetworkNode;
 import org.pictlonis.net.client.Client;
 import org.pictlonis.net.host.Server;
@@ -22,6 +23,7 @@ public class GameInformation {
 	private File USERS_FILE;
 	private boolean isPlayer;
 	private Drawer drawer;
+	private ChatView chat;
 
 	public enum NodeType {
 		SERVER,
@@ -113,5 +115,13 @@ public class GameInformation {
 
 	public Drawer getDrawer() {
 		return drawer;
+	}
+
+	public ChatView getChatView() {
+		return chat;
+	}
+
+	public void setChat(ChatView chat) {
+		this.chat = chat;
 	}
 }

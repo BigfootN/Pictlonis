@@ -4,6 +4,10 @@ import android.content.Context;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import org.pictlonis.data.GameInformation;
+import org.pictlonis.net.NetworkNode;
+import org.pictlonis.net.message.NetworkMessage;
+import org.pictlonis.net.message.PictlonisMessage;
 import org.pictlonis.utils.CommonViews;
 
 /**
@@ -11,24 +15,18 @@ import org.pictlonis.utils.CommonViews;
  */
 
 public class ChatViewInteractorImpl implements ChatViewInteractor{
-	private ScrollView view;
-	private int idx;
-	private Context context;
-
-	public ChatViewInteractorImpl(ChatView view) {
-		this.view = view.getScrollView();
-		context = this.view.getContext();
-		idx = 0;
-	}
-
 	@Override
-	public void addMessage(String sender, String message, int gravity) {
-		TextView textView;
-		String messageSent;
+	public void sendMessage(String msg) {
+		String msgToSend;
+		NetworkNode node;
 
-		messageSent = sender + ": " + message;
-		textView = CommonViews.createChatMessage(context, messageSent, gravity);
-		view.addView(textView, idx);
-		idx++;
+		msgToSend = PictlonisMessage.chatMessage(msg);
+		node = GameInformation.getInstance().getNode();
+
+		try {
+			node.sendMessage(msgToSend);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

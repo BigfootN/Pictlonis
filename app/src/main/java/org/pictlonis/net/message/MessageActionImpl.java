@@ -50,7 +50,6 @@ public class MessageActionImpl implements MessageAction {
 		MessageInfo.PictlonisMessageType type;
 		DrawOperation drawOp;
 		Drawer drawer;
-		PointF point;
 
 		gameInfoInst = GameInformation.getInstance();
 		type = msgInfo.getMessageType();
@@ -58,6 +57,8 @@ public class MessageActionImpl implements MessageAction {
 
 		if (type == MessageInfo.PictlonisMessageType.NB_CONNECTED) {
 			gameInfoInst.setNbConnected((Integer)msgInfo.getValue());
+		} else if (type == MessageInfo.PictlonisMessageType.CHAT_MSG){
+			gameInfoInst.getChatView().addMessage((String)msgInfo.getValue());
 		} else {
 			drawOp = buildDrawOp(msgInfo);
 			if (drawOp != null)

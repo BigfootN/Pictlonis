@@ -5,5 +5,5 @@ package org.pictlonis.chat;
  */
 
 public interface ChatViewPresenter {
-	void validateMessage(String sender, String message, int gravity);
+	void validateMessage(String message);
 }

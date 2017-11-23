@@ -5,5 +5,5 @@ package org.pictlonis.chat;
  */
 
 public interface ChatViewInteractor {
-	void addMessage(String msg, String sender, int gravity);
+	void sendMessage(String msg);
 }

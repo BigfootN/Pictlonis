@@ -16,6 +16,7 @@ public class PictlonisMessage {
 	private static final String POS_POINTN = "POS_PTN_";
 	private static final String POS_POINTM = "POS_PTM_";
 	private static final String POS_POINTL = "POS_PTL_";
+	private static final String CHAT_MSG = "CHAT_MSG_";
 
 	private static String pointToStr(PointF point) {
 		String ret;
@@ -23,6 +24,14 @@ public class PictlonisMessage {
 		ret = Float.toString(point.x);
 		ret += ",";
 		ret += Float.toString(point.y);
+
+		return ret;
+	}
+
+	private static String getChatMessage(String msg) {
+		String ret;
+
+		ret = msg.substring(CHAT_MSG.length());
 
 		return ret;
 	}
@@ -71,28 +80,30 @@ public class PictlonisMessage {
 
 	public static MessageInfo getInfoMessage(String msg) {
 		GameInformation gameInfo;
-		int value;
-		PointF point;
+		Object value;
 		MessageInfo<?> ret;
 
 		gameInfo = GameInformation.getInstance();
 		if (msg.startsWith(NB_CONNECTED)) {
 			value = nbConnected(msg);
 			ret = new MessageInfo<>(null, MessageInfo.PictlonisMessageType.NB_CONNECTED, value);
-			gameInfo.setNbConnected(value);
+			gameInfo.setNbConnected((int)value);
 		} else if (msg.startsWith(MAX_PLAYER)) {
 			value = maxPlayer(msg);
-			gameInfo.setNbPlayers(value);
+			gameInfo.setNbPlayers((int)value);
 			ret = new MessageInfo<>(null, MessageInfo.PictlonisMessageType.NB_PLAYERS, value);
 		} else if (msg.startsWith(POS_POINTN)) {
-			point = curPoint(msg);
-			ret = new MessageInfo<>(null, MessageInfo.PictlonisMessageType.POINT_NEW, point);
+			value = curPoint(msg);
+			ret = new MessageInfo<>(null, MessageInfo.PictlonisMessageType.POINT_NEW, value);
 		} else if (msg.startsWith(POS_POINTM)) {
-			point = newPoint(msg);
-			ret = new MessageInfo<>(null, MessageInfo.PictlonisMessageType.POINT_MOVE, point);
+			value = newPoint(msg);
+			ret = new MessageInfo<>(null, MessageInfo.PictlonisMessageType.POINT_MOVE, value);
 		} else if (msg.startsWith(POS_POINTL)) {
-			point = lastPoint(msg);
-			ret = new MessageInfo<>(null, MessageInfo.PictlonisMessageType.POINT_LAST, point);
+			value = lastPoint(msg);
+			ret = new MessageInfo<>(null, MessageInfo.PictlonisMessageType.POINT_LAST, value);
+		} else if (msg.startsWith(CHAT_MSG)) {
+			value = getChatMessage(msg);
+			ret = new MessageInfo<>(null, MessageInfo.PictlonisMessageType.CHAT_MSG, value);
 		} else {
 			ret = null;
 		}
@@ -138,6 +149,14 @@ public class PictlonisMessage {
 		String ret;
 
 		ret = POS_POINTL + pointToStr(point);
+
+		return ret;
+	}
+
+	public static String chatMessage(String msg) {
+		String ret;
+
+		ret = CHAT_MSG + msg;
 
 		return ret;
 	}
