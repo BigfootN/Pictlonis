@@ -37,6 +37,11 @@ public class UserList implements Serializable {
 		users.add(u);
 	}
 
+	public void replaceUser(User oldUser, User newUser) {
+		users.remove(oldUser);
+		users.add(newUser);
+	}
+
 	public void saveToFile(File file) throws Exception {
 		FileOutputStream fos;
 		ObjectOutputStream oos;

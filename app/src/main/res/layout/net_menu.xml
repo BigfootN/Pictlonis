@@ -23,4 +23,13 @@
         android:layout_marginTop="82dp"
         android:text="@string/clt_btn_title"/>
 
+    <Button
+        android:id="@+id/usersettings_btn"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="62dp"
+        android:text="@string/usersettings_btn_title" />
+
 </RelativeLayout>

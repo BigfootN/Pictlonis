@@ -19,6 +19,13 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".activity.usersettings.UserSettingsActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
         <activity android:name=".activity.subscribe.SubscribeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>

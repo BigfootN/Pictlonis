@@ -19,7 +19,7 @@ public class NetMenuPresenterImpl implements NetMenuPresenter {
 	public void manageButtonActions(View v) {
 		switch (v.getId()) {
 			case R.id.clt_btn:
-				view.gotToClientMenu();
+				view.goToClientMenu();
 				break;
 			case R.id.host_btn:
 				view.goToHostMenu();

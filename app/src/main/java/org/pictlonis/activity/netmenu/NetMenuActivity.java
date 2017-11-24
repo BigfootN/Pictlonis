@@ -10,28 +10,30 @@ import android.widget.RelativeLayout;
 import org.pictlonis.R;
 import org.pictlonis.activity.client.ClientSettingActivity;
 import org.pictlonis.activity.host.HostSettingActivity;
+import org.pictlonis.activity.usersettings.UserSettingsActivity;
 
 /**
  * Created by bigfoot on 31/10/17.
  */
 
 public class NetMenuActivity extends Activity implements View.OnClickListener, NetMenuView {
-	private RelativeLayout layout;
 	private NetMenuPresenter presenter;
 	private Button clientBtn;
 	private Button hostBtn;
+	private Button userSettingsBtn;
 
 	private void initLayout() {
 		setContentView(R.layout.net_menu);
-		layout = (RelativeLayout) findViewById(R.id.main_menu);
 	}
 
 	private void initButtons() {
 		clientBtn = findViewById(R.id.clt_btn);
 		hostBtn = findViewById(R.id.host_btn);
+		userSettingsBtn = findViewById(R.id.usersettings_btn);
 
 		clientBtn.setOnClickListener(this);
 		hostBtn.setOnClickListener(this);
+		userSettingsBtn.setOnClickListener(this);
 	}
 
 	@Override
@@ -56,10 +58,18 @@ public class NetMenuActivity extends Activity implements View.OnClickListener, N
 	}
 
 	@Override
-	public void gotToClientMenu() {
+	public void goToClientMenu() {
 		Intent i;
 
 		i = new Intent(this, ClientSettingActivity.class);
+		startActivity(i);
+	}
+
+	@Override
+	public void goToUserSettings() {
+		Intent i;
+
+		i = new Intent(this, UserSettingsActivity.class);
 		startActivity(i);
 	}
 }

@@ -8,6 +8,7 @@ public interface NetMenuView {
 
 	void goToHostMenu();
 
-	void gotToClientMenu();
+	void goToClientMenu();
 
+	void goToUserSettings();
 }
