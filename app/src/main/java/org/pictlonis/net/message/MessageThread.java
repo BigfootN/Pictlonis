@@ -34,7 +34,7 @@ public class MessageThread extends Thread implements Runnable {
 				msgInfo = PictlonisMessage.getInfoMessage(msg);
 				msgAction.takeAction(msgInfo);
 
-				sleep(50);
+				sleep(10);
 			} catch (Exception e) {
 				e.printStackTrace();
 				run = false;

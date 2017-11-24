@@ -59,18 +59,6 @@ public class WaitActivity extends Activity implements WaitView {
 			postExecute();
 		}
 
-		public void join() {
-			try {
-				t.join();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-
-		public boolean isRunning() {
-			return t.isAlive();
-		}
-
 		public void start() {
 			if (t == null) {
 				t = new Thread(this);

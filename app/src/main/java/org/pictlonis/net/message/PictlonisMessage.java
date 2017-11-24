@@ -17,6 +17,20 @@ public class PictlonisMessage {
 	private static final String POS_POINTM = "POS_PTM_";
 	private static final String POS_POINTL = "POS_PTL_";
 	private static final String CHAT_MSG = "CHAT_MSG_";
+	private static final String IS_PLAYER = "IS_PLAYER_";
+
+	private static Boolean getIsPlayer(String msg) {
+		Boolean ret;
+		String valueStr;
+
+		valueStr = msg.substring(IS_PLAYER.length());
+		if (valueStr.equals("0"))
+			ret = false;
+		else
+			ret = true;
+
+		return ret;
+	}
 
 	private static String pointToStr(PointF point) {
 		String ret;
@@ -104,7 +118,10 @@ public class PictlonisMessage {
 		} else if (msg.startsWith(CHAT_MSG)) {
 			value = getChatMessage(msg);
 			ret = new MessageInfo<>(null, MessageInfo.PictlonisMessageType.CHAT_MSG, value);
-		} else {
+		} else if (msg.startsWith(IS_PLAYER)) {
+			value = getIsPlayer(msg);
+			ret = new MessageInfo<>(null, MessageInfo.PictlonisMessageType.IS_PLAYER, value);
+		} else{
 			ret = null;
 		}
 
@@ -157,6 +174,16 @@ public class PictlonisMessage {
 		String ret;
 
 		ret = CHAT_MSG + msg;
+
+		return ret;
+	}
+
+	public static String isPlayer(boolean isPlayer) {
+		String ret;
+		String valueStr;
+
+		valueStr = isPlayer == true ? "1" : "0";
+		ret = CHAT_MSG + valueStr;
 
 		return ret;
 	}

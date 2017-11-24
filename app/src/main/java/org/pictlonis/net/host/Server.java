@@ -40,7 +40,7 @@ public class Server implements NetworkNode {
 	}
 
 	private void sendNbConn() throws Exception {
-		NetworkMessage.sendMessage(PictlonisMessage.nbConnected(sclients.size()), sclients);
+		sendMessage(PictlonisMessage.nbConnected(sclients.size()));
 	}
 
 	private void initServer() throws Exception {
@@ -51,6 +51,10 @@ public class Server implements NetworkNode {
 		ssocketChannel.configureBlocking(false);
 		ssocketChannel.socket().bind(addr);
 		ssocketChannel.register(selector, ssocketChannel.validOps());
+	}
+
+	private void sendIsPlayer(boolean isPlayer, SocketChannel socket) throws Exception{
+		sendMessageTo(PictlonisMessage.isPlayer(isPlayer), socket);
 	}
 
 	private void waitForClients() throws Exception {
@@ -85,14 +89,13 @@ public class Server implements NetworkNode {
 						schannel = ssocketChannel.accept();
 						schannel.configureBlocking(false);
 
-						System.out.println("Client trouve");
 						selector.wakeup();
 						schannel.register(selector, SelectionKey.OP_READ);
-						System.out.println("Client enregistre");
 
 						sclients.add(schannel);
 						sendMaxPlayers(schannel);
 						sendNbConn();
+						sendIsPlayer(true, schannel);
 						nb_conn++;
 						GameInformation.getInstance().setNbConnected(nb_conn);
 					}
@@ -119,8 +122,10 @@ public class Server implements NetworkNode {
 		isLaunched = false;
 
 		msgThread = new MessageThread(this);
+		GameInformation.getInstance().setIsPlayer(true);
 	}
 
+	@Override
 	public void launch() throws Exception {
 		if (!isLaunched) {
 			waitForClients();
@@ -157,6 +162,7 @@ public class Server implements NetworkNode {
 
 						sock_client = (SocketChannel) key.channel();
 						ret = NetworkMessage.readMessage(sock_client);
+						sendMessageFrom(ret, sock_client);
 					}
 
 					synchronized (selectionKeys) {

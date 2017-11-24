@@ -13,13 +13,9 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import org.pictlonis.data.GameInformation;
-import org.pictlonis.net.message.NetworkMessage;
 import org.pictlonis.net.message.PictlonisMessage;
 import org.pictlonis.utils.draw.DrawOperation;
-
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.jar.Attributes;
+import org.pictlonis.utils.draw.PathManager;
 
 /**
  * Created by bigfoot on 13/10/17.
@@ -43,6 +39,7 @@ public class Drawer extends View {
 	};
 
 	private void touch_start(float x, float y) {
+		mPathManager.getCurrentPath().reset();
 		mPathManager.newPath(x, y);
 		invalidate();
 	}
@@ -148,7 +145,10 @@ public class Drawer extends View {
 	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
 		super.onSizeChanged(w, h, oldw, oldh);
 
-		bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+		if (bitmap == null)
+			bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+		else
+			bitmap = Bitmap.createScaledBitmap(bitmap, w, h, true);
 		canvas = new Canvas(bitmap);
 	}
 

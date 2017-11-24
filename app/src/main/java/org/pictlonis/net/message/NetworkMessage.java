@@ -96,9 +96,6 @@ public class NetworkMessage {
 
 			read.getResult();
 
-			/*if (result.getException() != null)
-				throw result.getException();*/
-
 			ret += new String(buffer.array());
 		} while (!isLastMessage(ret));
 

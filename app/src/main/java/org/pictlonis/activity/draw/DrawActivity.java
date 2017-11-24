@@ -34,7 +34,6 @@ import static android.view.inputmethod.EditorInfo.IME_NULL;
 public class DrawActivity extends Activity implements TextView.OnEditorActionListener, DrawingView, ChatView {
 	private Drawer dv;
 	private EditText txtChat;
-	private DrawPresenter presenter;
 	private LinearLayout scrollLayout;
 	private ChatViewPresenter chatPresenter;
 
@@ -60,7 +59,6 @@ public class DrawActivity extends Activity implements TextView.OnEditorActionLis
 		initLayout();
 		initViews();
 
-		presenter = new DrawPresenterImpl(this);
 		chatPresenter = new ChatViewPresenterImpl(getApplicationContext(), this);
 	}
 
@@ -79,14 +77,18 @@ public class DrawActivity extends Activity implements TextView.OnEditorActionLis
 	@Override
 	public void addMessage(String msg) {
 		final TextView view;
+		final ScrollView scroll;
 
 		view = new TextView(this.getApplicationContext());
 		view.setText(msg);
+
+		scroll = findViewById(R.id.chatScroll);
 
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
 				scrollLayout.addView(view);
+				scroll.fullScroll(View.FOCUS_DOWN);
 			}
 		});
 	}

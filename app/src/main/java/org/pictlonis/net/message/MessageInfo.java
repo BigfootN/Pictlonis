@@ -18,7 +18,8 @@ public class MessageInfo<T> {
 		POINT_NEW,
 		POINT_MOVE,
 		POINT_LAST,
-		CHAT_MSG
+		CHAT_MSG,
+		IS_PLAYER
 	};
 
 	public MessageInfo(SocketChannel from, PictlonisMessageType type, T value) {

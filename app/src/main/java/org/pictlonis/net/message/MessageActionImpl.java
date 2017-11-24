@@ -59,6 +59,8 @@ public class MessageActionImpl implements MessageAction {
 			gameInfoInst.setNbConnected((Integer)msgInfo.getValue());
 		} else if (type == MessageInfo.PictlonisMessageType.CHAT_MSG){
 			gameInfoInst.getChatView().addMessage((String)msgInfo.getValue());
+		} else if (type == MessageInfo.PictlonisMessageType.IS_PLAYER) {
+			gameInfoInst.setIsPlayer((Boolean)msgInfo.getValue());
 		} else {
 			drawOp = buildDrawOp(msgInfo);
 			if (drawOp != null)
