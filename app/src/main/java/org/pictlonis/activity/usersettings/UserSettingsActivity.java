@@ -2,12 +2,14 @@ package org.pictlonis.activity.usersettings;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
 import org.pictlonis.R;
+import org.pictlonis.activity.netmenu.NetMenuActivity;
 import org.pictlonis.data.User;
 import org.pictlonis.utils.CommonViews;
 import org.w3c.dom.Text;
@@ -30,7 +32,7 @@ public class UserSettingsActivity extends Activity implements UserSettingsView, 
 	}
 
 	private void initValBtn() {
-		valBtn = findViewById(R.id.usersettings_btn);
+		valBtn = findViewById(R.id.save_btn);
 		valBtn.setOnClickListener(this);
 	}
 
@@ -54,8 +56,8 @@ public class UserSettingsActivity extends Activity implements UserSettingsView, 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		presenter = new UserSettingsPresenterImpl(this);
 		setContentView(R.layout.user_settings_layout);
+		presenter = new UserSettingsPresenterImpl(this);
 		initValBtn();
 		initViews();
 		fillInformation();
@@ -67,6 +69,14 @@ public class UserSettingsActivity extends Activity implements UserSettingsView, 
 
 		dialog = CommonViews.createAlertDialogErr(getApplicationContext(), "Erreur", msg);
 		dialog.show();
+	}
+
+	@Override
+	public void goToNetMenu() {
+		Intent i;
+
+		i = new Intent(this, NetMenuActivity.class);
+		startActivity(i);
 	}
 
 	@Override

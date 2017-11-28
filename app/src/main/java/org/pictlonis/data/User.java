@@ -13,6 +13,10 @@ public class User implements Serializable {
 	private String lname;
 	private int pwdHash;
 
+	private int getHashCode(String str) {
+		return (str == null) ? 0 : str.hashCode();
+	}
+
 	private String buildProperty(String prop) {
 		String ret;
 
@@ -73,11 +77,11 @@ public class User implements Serializable {
 		int ret;
 
 		ret = 1;
-		ret = ret * 17 + uname.hashCode();
+		ret = ret * 17 + getHashCode(uname);
 		ret = ret * 31 + pwdHash;
-		ret = ret * 37 + email.hashCode();
-		ret = ret * 11 + fname.hashCode();
-		ret = ret * 7  + lname.hashCode();
+		ret = ret * 37 + getHashCode(email);
+		ret = ret * 11 + getHashCode(fname);
+		ret = ret * 7  + getHashCode(lname);
 
 		return ret;
 	}

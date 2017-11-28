@@ -17,14 +17,16 @@ public class SubscribePresenterImpl implements SubscribePresenter {
 	}
 
 	@Override
-	public void validateSubscribtion(String uname, String pwd) {
+	public void validateSubscribtion(String uname, String fname, String lname, String email, String pwd) {
+		User user;
 		if (uname == null || pwd == null)
 			view.onFailure("Informations manquantes!");
 		else if (Utils.containsWhiteSpace(uname))
 			view.onFailure("Nom d'utilisateur contient des espaces!");
 		else {
 			try {
-				interactor.saveUser(new User(uname, pwd));
+				user = new User(uname, pwd, email, fname, lname);
+				interactor.saveUser(user);
 				view.onSuccess();
 			} catch (Exception e) {
 				view.onFailure(e.getMessage());

@@ -19,7 +19,6 @@ import org.pictlonis.utils.CommonViews;
  */
 
 public class LoginActivity extends Activity implements LoginView, View.OnClickListener {
-	private RelativeLayout layout;
 	private EditText uName;
 	private EditText pwd;
 	private Button valBtn;
@@ -27,7 +26,6 @@ public class LoginActivity extends Activity implements LoginView, View.OnClickLi
 
 	private void initLayout() {
 		setContentView(R.layout.login_layout);
-		layout = findViewById(R.id.login_layout);
 	}
 
 	private void initBtn() {

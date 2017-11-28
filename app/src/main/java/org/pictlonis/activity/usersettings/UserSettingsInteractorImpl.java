@@ -17,11 +17,15 @@ public class UserSettingsInteractorImpl implements UserSettingsInteractor{
 		User curUser;
 		File userListFile;
 
-		uList = GameInformation.getInstance().getUserList();
-		userListFile = GameInformation.getInstance().getUsersFile();
 		curUser = getCurrentUser();
+
+		userListFile = GameInformation.getInstance().getUsersFile();
+		uList = new UserList();
+		uList.replaceFromFile(userListFile);
+
 		uList.replaceUser(curUser, user);
 		uList.saveToFile(userListFile);
+		GameInformation.getInstance().setUser(user);
 	}
 
 	@Override

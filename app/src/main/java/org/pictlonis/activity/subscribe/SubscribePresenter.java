@@ -5,5 +5,5 @@ package org.pictlonis.activity.subscribe;
  */
 
 public interface SubscribePresenter {
-	void validateSubscribtion(String uname, String pwd);
+	void validateSubscribtion(String uname, String fname, String lname, String email, String pwd);
 }

@@ -8,6 +8,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.ListIterator;
 import java.util.Vector;
 
 /**
@@ -74,5 +75,22 @@ public class UserList implements Serializable {
 
 	public boolean userExists(User u) {
 		return users.contains(u);
+	}
+
+	public User getUser(User u) {
+		Iterator<User> it;
+		User ret;
+		User curUser;
+
+		ret = null;
+		it = users.iterator();
+
+		while (it.hasNext()) {
+			curUser = it.next();
+			if (curUser.equals(u))
+				ret = curUser;
+		}
+
+		return ret;
 	}
 }

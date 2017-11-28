@@ -21,6 +21,9 @@ public class SubscribeActivity extends Activity implements SubscribeView, View.O
 	private RelativeLayout layout;
 	private EditText pwd;
 	private EditText uname;
+	private EditText email;
+	private EditText fname;
+	private EditText lname;
 	private Button valBtn;
 	private SubscribePresenter presenter;
 
@@ -35,6 +38,9 @@ public class SubscribeActivity extends Activity implements SubscribeView, View.O
 		initLayout();
 		pwd = layout.findViewById(R.id.pwd_sub);
 		uname = layout.findViewById(R.id.uname_sub);
+		email = layout.findViewById(R.id.email_sub);
+		fname = layout.findViewById(R.id.fname_sub);
+		lname = layout.findViewById(R.id.lname_sub);
 		valBtn = layout.findViewById(R.id.subscribe_btn);
 		valBtn.setOnClickListener(this);
 		presenter = new SubscribePresenterImpl(this);
@@ -58,6 +64,18 @@ public class SubscribeActivity extends Activity implements SubscribeView, View.O
 
 	@Override
 	public void onClick(View v) {
-		presenter.validateSubscribtion(uname.getText().toString(), pwd.getText().toString());
+		String unameStr;
+		String pwdStr;
+		String emailStr;
+		String lnameStr;
+		String fnameStr;
+
+		unameStr = uname.getText().toString();
+		pwdStr = pwd.getText().toString();
+		emailStr = email.getText().toString();
+		lnameStr = lname.getText().toString();
+		fnameStr = fname.getText().toString();
+
+		presenter.validateSubscribtion(unameStr, fnameStr, lnameStr, emailStr, pwdStr);
 	}
 }

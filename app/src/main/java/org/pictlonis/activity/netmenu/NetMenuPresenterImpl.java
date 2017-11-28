@@ -24,6 +24,9 @@ public class NetMenuPresenterImpl implements NetMenuPresenter {
 			case R.id.host_btn:
 				view.goToHostMenu();
 				break;
+			case R.id.usersettings_btn:
+				view.goToUserSettings();
+				break;
 		}
 	}
 }

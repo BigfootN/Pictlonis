@@ -22,7 +22,7 @@ public class LoginInteractorImpl implements LoginInteractor {
 		ret = false;
 		usersFile = GameInformation.getInstance().getUsersFile();
 		userList = new UserList();
-		user = new User(uname, pwd);
+		user = new User(uname, pwd, null, null, null);
 
 		try {
 			userList.replaceFromFile(usersFile);
@@ -31,6 +31,7 @@ public class LoginInteractorImpl implements LoginInteractor {
 		}
 
 		if (userList.userExists(user)) {
+			user = userList.getUser(user);
 			GameInformation.getInstance().setUser(user);
 			ret = true;
 		}

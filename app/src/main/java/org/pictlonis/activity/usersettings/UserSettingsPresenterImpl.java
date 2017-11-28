@@ -31,6 +31,7 @@ public class UserSettingsPresenterImpl implements UserSettingsPresenter {
 		curUser.setUname(uname);
 		try {
 			interactor.saveSettings(curUser);
+			userSettingsView.goToNetMenu();
 		} catch (Exception e) {
 			userSettingsView.onFailure(e.getMessage());
 		}

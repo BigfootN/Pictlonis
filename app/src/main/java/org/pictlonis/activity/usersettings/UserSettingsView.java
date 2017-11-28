@@ -6,4 +6,5 @@ package org.pictlonis.activity.usersettings;
 
 public interface UserSettingsView {
 	void onFailure(String msg);
+	void goToNetMenu();
 }

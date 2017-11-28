@@ -24,7 +24,7 @@ public class GameInformation {
 	private boolean isPlayer;
 	private Drawer drawer;
 	private ChatView chat;
-	private UserList userList;
+	private UserList uList;
 
 	public enum NodeType {
 		SERVER,
@@ -44,14 +44,6 @@ public class GameInformation {
 
 	public File getUsersFile() {
 		return USERS_FILE;
-	}
-
-	public UserList getUserList() {
-		return userList;
-	}
-
-	public void setUserList(UserList userList) {
-		this.userList = userList;
 	}
 
 	public void setUser(User user) {
@@ -88,6 +80,14 @@ public class GameInformation {
 			return server;
 
 		return null;
+	}
+
+	public void setUserList(UserList uList) {
+		this.uList = uList;
+	}
+
+	public UserList getUserList() {
+		return uList;
 	}
 
 	public void setNbPlayers(int nbPlayers) {

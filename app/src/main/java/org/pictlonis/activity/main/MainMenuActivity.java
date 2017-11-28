@@ -19,14 +19,12 @@ import org.pictlonis.data.GameInformation;
  */
 
 public class MainMenuActivity extends Activity implements View.OnClickListener, MainMenuView {
-	private RelativeLayout layout;
 	private MainMenuPresenter presenter;
 	private Button loginBtn;
 	private Button subscribeBtn;
 
 	private void initLayout() {
 		setContentView(R.layout.main_menu);
-		layout = (RelativeLayout) findViewById(R.id.main_menu);
 	}
 
 	private void initButtons() {

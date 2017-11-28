@@ -12,23 +12,51 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="76dp"
+        android:layout_marginTop="31dp"
         android:ems="10"
-        android:inputType="text"
         android:hint="@string/name_hint"
+        android:inputType="text"
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="284dp" />
+
+    <EditText
+        android:id="@+id/fname_sub"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/lname_sub"
+        android:layout_marginTop="25dp"
+        android:hint="@string/fname_hint" />
+
+    <EditText
+        android:id="@+id/lname_sub"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/uname_sub"
+        android:layout_marginTop="35dp"
+        android:hint="@string/lname_hint" />
+
+
+    <EditText
+        android:id="@+id/email_sub"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/fname_sub"
+        android:layout_marginTop="26dp"
+        android:hint="@string/mail_hint" />
 
     <EditText
         android:id="@+id/pwd_sub"
         android:layout_width="388dp"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/subscribe_btn"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/uname_sub"
-        android:layout_marginTop="136dp"
+        android:layout_marginBottom="37dp"
         android:ems="10"
-        android:inputType="textPassword"
         android:hint="@string/pwd_hint"
+        android:inputType="textPassword"
         tools:layout_editor_absoluteX="-3dp"
         tools:layout_editor_absoluteY="107dp" />
 
@@ -38,7 +66,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="80dp"
+        android:layout_marginBottom="44dp"
         android:text="@string/validate_btn_title" />
 
 
